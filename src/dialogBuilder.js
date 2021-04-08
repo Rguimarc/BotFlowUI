@@ -51,16 +51,61 @@ class DialogBuilder extends Component {
         super(props);
 
         this.state = {
-            mode: 'selection'
+            mode: 'selection',
+            intents: [],
+            currentid: '',
+            currentPhrase: ''
         }
 
         this.createIntent = this.createIntent.bind(this);
+        //this.handleTextChange = this.handleTextChange.bind(this);
+        this.saveIntent = this.saveIntent.bind(this);
     }
 
     createIntent() {
         this.setState({
-            mode: 'createIntent'
+            mode: 'createIntent',
+            intents: [...this.state.intents, { id: 'intent' + this.state.intents.length + 1, phrase: '' }]
         })
+        console.log(JSON.stringify(this.state.intents))
+    }
+
+    saveIntent() {
+        console.log("entrou saveIntent ")
+        console.log(JSON.stringify(this.state.intents))
+        var foundIndex = this.state.intents.findIndex(x => x.id == this.state.currentid);
+        console.log("current id ")
+        console.log(this.state.currentid)
+        console.log("foundIndex ")
+        console.log(foundIndex)
+
+        this.state.intents[foundIndex].phrase = this.state.currentPhrase;
+
+        let newIntents = this.state.intents;
+
+
+
+        console.log("new intent ")
+
+        console.log(JSON.stringify(newIntents))
+
+
+        this.setState({
+            intents: [...this.state.intents, { id: 'intent' + this.state.intents.length + 1, phrase: '' }]
+        })
+
+        console.log("depois do set state  ")
+        console.log(JSON.stringify(this.state.intents))
+    }
+
+    handleTextChange(id, e) {
+        console.log("entrou handleTextChange ")
+        this.state.currentid = id
+        this.state.currentPhrase = e.target.value
+
+
+        console.log(this.state.currentid)
+        console.log(JSON.stringify(this.state.intents))
     }
 
     render() {
@@ -93,34 +138,36 @@ class DialogBuilder extends Component {
                 </Container>
             )
         }
-        else if (this.state.mode == 'createIntent')
+        else if (this.state.mode == 'createIntent') {
+
             return (
                 <Container>
                     <Box borderColor="grey.500" border={1} height={200} padding={10}    >
                         <Grid>
-                            <Grid container spacing={1}>
-                                <Grid item xs={10} sm={10}>
-                                    <FormControl fullWidth  >
-                           
-                                        <FilledInput 
-                                            startAdornment={<InputAdornment position="start">
-                                                <AccountCircle />  
-                                            </InputAdornment>}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={1} sm={2}>
-                                    <IconButton id='btnUserIntent' size="small">
-                                        <AddIcon fontSize="large" variant="contained" color="primary" />
-                                        Intenção
+                            {this.state.intents.map((itemDialog) => (
+                                <Grid container spacing={1}>
+                                    <Grid item xs={10} sm={10}>
+                                        <FormControl fullWidth  >
+                                            <FilledInput
+                                                key={itemDialog.id}
+                                                onBlur={(e) => this.handleTextChange(itemDialog.id, e)}
+                                                startAdornment={<InputAdornment position="start"><AccountCircle /></InputAdornment>} />
 
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={1} sm={2}>
+                                        <IconButton id='btnUserIntent' size="small" onClick={this.saveIntent}>
+                                            <AddIcon fontSize="large" variant="contained" color="primary" />
+                                        Intenção
                                     </IconButton  >
+                                    </Grid>
                                 </Grid>
-                            </Grid>
+                            ))}
                         </Grid>
                     </Box>
                 </Container>
             )
+        }
     }
 }
 
