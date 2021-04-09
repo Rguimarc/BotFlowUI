@@ -8,38 +8,17 @@ class Flow extends Component {
 
   constructor(props) {
     super(props);
+    this.nodeInfo = { x: 250, y: 250, id: 1 }
     this.state = {
       elements: [
         {
           id: '1',
-          data: { label: <DialogBuilder /> },
-          position: { x: 250, y: 25 },
-          style: {
-            width: 600,
-          },
-        },
-        // default node
-        {
-          id: '2',
-          // you can also pass a React component as a label
-          data: { label: <DialogBuilder /> },
-          position: { x: 100, y: 125 },
-          style: {
-            width: 600,
-          },
-        },
-        {
-          id: '3',
-          data: { label: <DialogBuilder /> },
+          data: { label: <DialogBuilder nodeInfo={this.nodeInfo} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
           position: { x: 250, y: 250 },
           style: {
             width: 600,
           },
-        },
-
-        // animated edge
-        { id: 'e1-2', source: '1', target: '2', animated: true },
-        { id: 'e2-3', source: '2', target: '3', animated: true },
+        }
       ]
     }
 
@@ -47,6 +26,55 @@ class Flow extends Component {
     this.addNode2 = this.addNode2.bind(this);
   };
 
+  createDecisorNode(nodeInfo) {
+    console.log("no create do flow")
+    console.log(nodeInfo)
+    let nodes = []
+
+    let newNodeinfo1 = {
+      x: nodeInfo.x - 200, y: nodeInfo.y + 200, id: String(nodeInfo.id + 1)
+    }
+    let node1 = {
+      id: String(nodeInfo.id + 1),
+      data: { label: <DialogBuilder nodeInfo={newNodeinfo1} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
+      position: { x: nodeInfo.x - 200, y: nodeInfo.y + 200 },
+      style: {
+        width: 600,
+      },
+    };
+
+    let newNodeinfo2 = {
+      x: nodeInfo.x - 200, y: nodeInfo.y + 200, id: String(nodeInfo.id + 2)
+    }
+
+    let node2 = {
+      id: String(nodeInfo.id + 2),
+      data: { label: <DialogBuilder nodeInfo={newNodeinfo2} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
+      position: { x: nodeInfo.x + 200, y: nodeInfo.y + 200 },
+      style: {
+        width: 600,
+      },
+    };
+
+    nodes.push(node1)
+    nodes.push(node2)
+
+    console.log("CRIADO!")
+    nodes.push({ id: 'e' + nodeInfo.id + '-' + node1.id, source: String(nodeInfo.id), target: String(node1.id), animated: true })
+    nodes.push({ id: 'e' + nodeInfo.id + '-' + node2.id, source: String(nodeInfo.id), target: String(node2.id), animated: true })
+
+
+
+    console.log(nodes)
+    this.setState({
+      elements: [...this.state.elements, ...nodes]
+    })
+
+  }
+
+  createDecisorNodeCallback = (nodeInfo) => {
+    this.createDecisorNode(nodeInfo)
+  }
 
   addNode1() {
     let newelement = {
@@ -70,14 +98,13 @@ class Flow extends Component {
     };
     this.setState({
       elements: [...this.state.elements, newelement2]
-
     })
   }
 
   render() {
     console.log(this.state.elements)
     return (
-      <div className="App" style={{ height: 3000 }}>
+      <div className="App" style={{ height: 6000,width: 6000 }}>
         <button onClick={this.addNode1}>addNode1</button>
         <button onClick={this.addNode2}>addNode2</button>
         <ReactFlow elements={this.state.elements} />

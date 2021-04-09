@@ -19,7 +19,7 @@ class DialogBuilder extends Component {
 
         this.state = {
             mode: 'selection',
-            intents: [],
+            dialogs: [],
             currentid: '',
             currentPhrase: ''
         }
@@ -29,21 +29,20 @@ class DialogBuilder extends Component {
     }
 
     createIntent() {
-        console.log(this.state.mode)
         this.setState({
             mode: 'createIntent',
-            intents: [...this.state.intents, { id: 'intent' + this.state.intents.length + 1, phrase: '', saved: false }]
+            dialogs: [...this.state.dialogs, { id: 'dialogIntent' + this.state.dialogs.length + 1, phrase: '', saved: false, type: 'intent' }]
         })
     }
 
     saveIntent() {
 
-        var foundIndex = this.state.intents.findIndex(x => x.id == this.state.currentid);
-        this.state.intents[foundIndex].phrase = this.state.currentPhrase;
-        this.state.intents[foundIndex].saved = true;
+        var foundIndex = this.state.dialogs.findIndex(x => x.id == this.state.currentid);
+        this.state.dialogs[foundIndex].phrase = this.state.currentPhrase;
+        this.state.dialogs[foundIndex].saved = true;
 
         this.setState({
-            intents: this.state.intents,
+            dialogs: this.state.dialogs,
             mode: 'selection'
         })
 
@@ -53,6 +52,19 @@ class DialogBuilder extends Component {
 
         this.state.currentid = id
         this.state.currentPhrase = e.target.value
+    }
+
+    createBotResponse() {
+        this.setState({
+            mode: 'createIntent',
+            dialogs: [...this.state.dialogs, { id: 'dialogBot' + this.state.dialogs.length + 1, phrase: '', saved: false, type: 'bot' }]
+        })
+    }
+
+    createDecisor() {     
+        console.log('CREATE DECISOR')
+        console.log(this.props.nodeInfo)
+        this.props.createDecisorNodeCallback(this.props.nodeInfo);
     }
 
     handleTextChangeCallback = (id, e) => {
@@ -68,6 +80,15 @@ class DialogBuilder extends Component {
         this.createIntent()
     }
 
+
+    createBotResponseCallback = () => {
+        this.createBotResponse()
+    }
+
+    createDecisorCallback = () => {
+        this.createDecisor()
+    }
+
     render() {
 
         const { classes } = this.props;
@@ -79,7 +100,7 @@ class DialogBuilder extends Component {
                 <Box borderColor="grey.500" height='100%' width='100%'  >
 
                     <Grid className={classes.gridDialog}>
-                        {this.state.intents.map((itemDialog) => (
+                        {this.state.dialogs.map((itemDialog) => (
                             <DialogText item={itemDialog} saved={itemDialog.saved}
                                 handleTextChangeCallback={this.handleTextChangeCallback}
                                 saveIntentCallback={this.saveIntentCallback}>
@@ -88,7 +109,9 @@ class DialogBuilder extends Component {
                     </Grid>
 
                     <DialogOptions mode={this.state.mode}
-                        createIntentCallback={this.createIntentCallback}>
+                        createIntentCallback={this.createIntentCallback}
+                        createBotResponseCallback={this.createBotResponseCallback}
+                        createDecisorCallback = {this.createDecisorCallback}>
                     </DialogOptions>
                 </Box>
             </Container >

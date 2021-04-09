@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
-import { Button } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
+import CallSplitIcon from '@material-ui/icons/CallSplit';
 
 const styles = theme => ({
     buttonBot: {
-        width: '100%'
+        width: '80%'
+    },
+    buttonDecision: {
+        width: '80%',
+        backgroundColor : 'rgba( 241, 90, 36, 1 )'
     },
     gridOptions: {
         margin: 10
@@ -23,7 +28,7 @@ class DialogOptions extends Component {
             return (
 
                 <div className={classes.gridOptions}>
-                    <Grid container   >
+                    <Grid container>
                         <Grid item xs={3}>
                             <Button
                                 variant='contained'
@@ -39,9 +44,20 @@ class DialogOptions extends Component {
                                 variant='containedSecondary'
                                 className={classes.buttonBot}
                                 color='palette.secondary.light'
+                                onClick={() => { this.props.createBotResponseCallback() }}
                                 id='btnBotResponse'>
                                 Bot
-                       </Button>
+                            </Button>
+                        </Grid>
+                        <Grid item xs={3}>                     
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className={classes.buttonDecision}
+                                onClick={() => { this.props.createDecisorCallback() }}
+                                endIcon={<CallSplitIcon></CallSplitIcon>}>
+                                decisao
+                            </Button>
                         </Grid>
                     </Grid>
                 </div>
