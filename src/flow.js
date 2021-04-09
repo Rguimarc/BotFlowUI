@@ -12,9 +12,11 @@ class Flow extends Component {
       elements: [
         {
           id: '1',
-          type: 'input', // input node
-          data: { label: 'Input Node' },
+          data: { label: <DialogBuilder /> },
           position: { x: 250, y: 25 },
+          style: {
+            width: 600,
+          },
         },
         // default node
         {
@@ -28,14 +30,16 @@ class Flow extends Component {
         },
         {
           id: '3',
-          type: 'output', // output node
-          data: { label: 'Output Node' },
+          data: { label: <DialogBuilder /> },
           position: { x: 250, y: 250 },
+          style: {
+            width: 600,
+          },
         },
 
         // animated edge
         { id: 'e1-2', source: '1', target: '2', animated: true },
-        { id: 'e2-3', source: '2', target: '3' },
+        { id: 'e2-3', source: '2', target: '3', animated: true },
       ]
     }
 

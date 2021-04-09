@@ -1,4 +1,4 @@
-import React, { Component } from 'react'; 
+import React, { Component } from 'react';
 import { Box, Container } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -32,7 +32,7 @@ class DialogBuilder extends Component {
         console.log(this.state.mode)
         this.setState({
             mode: 'createIntent',
-            intents: [...this.state.intents, { id: 'intent' + this.state.intents.length + 1, phrase: '' }]
+            intents: [...this.state.intents, { id: 'intent' + this.state.intents.length + 1, phrase: '', saved: false }]
         })
     }
 
@@ -40,6 +40,7 @@ class DialogBuilder extends Component {
 
         var foundIndex = this.state.intents.findIndex(x => x.id == this.state.currentid);
         this.state.intents[foundIndex].phrase = this.state.currentPhrase;
+        this.state.intents[foundIndex].saved = true;
 
         this.setState({
             intents: this.state.intents,
@@ -77,9 +78,9 @@ class DialogBuilder extends Component {
             <Container>
                 <Box borderColor="grey.500" height='100%' width='100%'  >
 
-                    <Grid className ={classes.gridDialog }>
+                    <Grid className={classes.gridDialog}>
                         {this.state.intents.map((itemDialog) => (
-                            <DialogText item={itemDialog}
+                            <DialogText item={itemDialog} saved={itemDialog.saved}
                                 handleTextChangeCallback={this.handleTextChangeCallback}
                                 saveIntentCallback={this.saveIntentCallback}>
                             </DialogText>

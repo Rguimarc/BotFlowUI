@@ -33,12 +33,14 @@ class DialogText extends Component {
 
                         </FormControl>
                     </Grid>
-                    <Grid item xs={1} sm={2}>
-                        <IconButton id='btnUserIntent' size="small" onClick={() => this.props.saveIntentCallback()}>
-                            <AddIcon fontSize="large" variant="contained" color="primary" />
-                              Intenção
-                        </IconButton  >
-                    </Grid>
+                    { this.props.saved == false ?
+                         <Grid item xs={1} sm={2}>
+                         <IconButton id='btnUserIntent' size="small" onClick={() => this.props.saveIntentCallback()}>
+                             <AddIcon fontSize="large" variant="contained" color="primary" />
+                               Intenção
+                         </IconButton  >
+                     </Grid> : null
+                    }       
                 </Grid>
             </div>
         )
