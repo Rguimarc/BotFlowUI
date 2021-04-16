@@ -3,6 +3,7 @@ import { Button, IconButton } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import CallSplitIcon from '@material-ui/icons/CallSplit';
+import SimpleMenu from './menuOptions';
 
 const styles = theme => ({
     buttonBot: {
@@ -10,7 +11,7 @@ const styles = theme => ({
     },
     buttonDecision: {
         width: '80%',
-        backgroundColor : 'rgba( 241, 90, 36, 1 )'
+        backgroundColor: 'rgba( 241, 90, 36, 1 )'
     },
     gridOptions: {
         margin: 10
@@ -40,16 +41,12 @@ class DialogOptions extends Component {
                         </Button >
                         </Grid>
                         <Grid item xs={2}>
-                            <Button
-                                variant='containedSecondary'
-                                className={classes.buttonBot}
-                                color='palette.secondary.light'
-                                onClick={() => { this.props.createBotResponseCallback() }}
-                                id='btnBotResponse'>
-                                Bot
-                            </Button>
+                            <SimpleMenu
+                                simpleResponse={this.props.createBotResponseCallback}>
+                            </SimpleMenu>
+                           
                         </Grid>
-                        <Grid item xs={3}>                     
+                        <Grid item xs={3}>
                             <Button
                                 variant="contained"
                                 color="primary"
