@@ -24,6 +24,8 @@ import Flow from "./flow"
 import Container from '@material-ui/core/Container';
 import DialogBuilder from './dialogBuilder';
 import { ReactFlowProvider } from 'react-flow-renderer';
+import RichTextComponent from './richpoc';
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -102,7 +104,7 @@ function App() {
       </Drawer>
       <Container>
       <div style={{ padding: 200 }}>
-        <Flow />
+     <RichTextComponent></RichTextComponent>
       </div>
 
       </Container>
