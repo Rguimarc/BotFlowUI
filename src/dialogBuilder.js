@@ -34,32 +34,43 @@ class DialogBuilder extends Component {
             dialogs: [...this.state.dialogs, { id: 'dialogIntent' + this.state.dialogs.length + 1, phrase: '', saved: false, type: 'intent' }]
         })
     }
+    
+    createBotResponse() {
+       
+        this.setState({
+            mode: 'createIntent',
+            dialogs: [...this.state.dialogs, { id: 'dialogBot' + this.state.dialogs.length + 1, phrase: '', saved: false, type: 'bot' }]
+        })
+        console.log("CREATE BOT RESPONSE")
 
+    }
+
+
+    
     saveIntent() {
-
-        var foundIndex = this.state.dialogs.findIndex(x => x.id == this.state.currentid);
-        this.state.dialogs[foundIndex].phrase = this.state.currentPhrase;
-        this.state.dialogs[foundIndex].saved = true;
+        // console.log('NO SAVE ')
+        // console.log(this.state.dialogs)
+        // console.log(this.state.currentid)
+        // console.log(data)
+        // var foundIndex = this.state.dialogs.findIndex(x => x.id == this.state.currentid);
+        // this.state.dialogs[foundIndex].phrase = data;
+        // this.state.dialogs[foundIndex].saved = true;
 
         this.setState({
             dialogs: this.state.dialogs,
             mode: 'selection'
         })
-
     }
 
     handleTextChange(id, e) {
+        console.log('NO HANDLETEXT CHANGE ')
 
+        console.log(id)
+        console.log(e)
         this.state.currentid = id
-        this.state.currentPhrase = e.target.value
+        this.state.currentPhrase = e
     }
 
-    createBotResponse() {
-        this.setState({
-            mode: 'createIntent',
-            dialogs: [...this.state.dialogs, { id: 'dialogBot' + this.state.dialogs.length + 1, phrase: '', saved: false, type: 'bot' }]
-        })
-    }
 
     createDecisor() {     
         console.log('CREATE DECISOR')
@@ -90,7 +101,7 @@ class DialogBuilder extends Component {
     }
 
     render() {
-
+        console.log(this.state.dialogs)
         const { classes } = this.props;
 
 
@@ -101,7 +112,10 @@ class DialogBuilder extends Component {
 
                     <Grid className={classes.gridDialog}>
                         {this.state.dialogs.map((itemDialog) => (
-                            <DialogText item={itemDialog} saved={itemDialog.saved}
+                            <DialogText 
+                                item={itemDialog} 
+                                saved={itemDialog.saved}
+                                dialogs = {this.state.dialogs}
                                 handleTextChangeCallback={this.handleTextChangeCallback}
                                 saveIntentCallback={this.saveIntentCallback}>
                             </DialogText>

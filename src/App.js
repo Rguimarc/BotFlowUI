@@ -20,11 +20,9 @@ import ForumIcon from '@material-ui/icons/Forum';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import Drawer from '@material-ui/core/Drawer';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
-import Flow from "./flow"
 import Container from '@material-ui/core/Container';
 import DialogBuilder from './dialogBuilder';
-import { ReactFlowProvider } from 'react-flow-renderer';
-import RichTextComponent from './richpoc';
+ 
 
 const drawerWidth = 240;
 
@@ -104,7 +102,7 @@ function App() {
       </Drawer>
       <Container>
       <div style={{ padding: 200 }}>
-     <RichTextComponent></RichTextComponent>
+         <DialogBuilder></DialogBuilder>
       </div>
 
       </Container>
