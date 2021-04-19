@@ -3,7 +3,7 @@ import { Button, IconButton } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import CallSplitIcon from '@material-ui/icons/CallSplit';
-import SimpleMenu from './menuOptions';
+import SimpleMenu from '../menuOptions';
 
 const styles = theme => ({
     buttonBot: {
@@ -18,7 +18,7 @@ const styles = theme => ({
     }
 });
 
-class DialogOptions extends Component {
+class Options extends Component {
 
     render(props) {
 
@@ -65,4 +65,4 @@ class DialogOptions extends Component {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(DialogOptions);
+export default withStyles(styles, { withTheme: true })(Options);

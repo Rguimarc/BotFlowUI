@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './index.css'
 import ReactFlow from 'react-flow-renderer';
-import DialogBuilder from './dialogBuilder';
+import Builder from './builder';
 
 
 class Flow extends Component {
@@ -13,7 +13,7 @@ class Flow extends Component {
       elements: [
         {
           id: '1',
-          data: { label: <DialogBuilder nodeInfo={this.nodeInfo} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
+          data: { label: <Builder nodeInfo={this.nodeInfo} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
           position: { x: 250, y: 250 },
           style: {
             width: 600,
@@ -36,7 +36,7 @@ class Flow extends Component {
     }
     let node1 = {
       id: String(nodeInfo.id + 1),
-      data: { label: <DialogBuilder nodeInfo={newNodeinfo1} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
+      data: { label: <Builder nodeInfo={newNodeinfo1} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
       position: { x: nodeInfo.x - 200, y: nodeInfo.y + 200 },
       style: {
         width: 600,
@@ -49,7 +49,7 @@ class Flow extends Component {
 
     let node2 = {
       id: String(nodeInfo.id + 2),
-      data: { label: <DialogBuilder nodeInfo={newNodeinfo2} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
+      data: { label: <Builder nodeInfo={newNodeinfo2} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
       position: { x: nodeInfo.x + 200, y: nodeInfo.y + 200 },
       style: {
         width: 600,

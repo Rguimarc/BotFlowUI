@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import FormControl from '@material-ui/core/FormControl';
+import { FormControl, IconButton, Grid, TextField } from '@material-ui/core';
+import SaveIcon from '@material-ui/icons/Save';
 import AccountIcon from '@material-ui/icons/AccountCircle';
 import { withStyles } from '@material-ui/core/styles';
-import { TextField } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import SaveIcon from '@material-ui/icons/Save';
-import IconButton from '@material-ui/core/IconButton';
+import Switch from '@material-ui/core/Switch';
 
 const styles = theme => ({
     card: {
@@ -13,56 +11,64 @@ const styles = theme => ({
         transition: '0.3s',
         boxshadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
         padding: '2px 16px',
-        background: '#3f50b5',
-        color: '#FFFFFF',
-        width: "100%"
+        width: "100%",
+        borderRadius: '25px',
+        border: '2px solid #3f50b5'
     }
 });
 
-class IntentText extends Component {
+class Intent extends Component {
 
     constructor(props) {
 
         super(props)
 
         this.state = {
-            status : this.props.status
+            status: this.props.status,
+            hasSlot: this.props.hasSlot
         }
     }
- 
-    onBlur (e) {
-        console.log(e.target.value)
-         this.setState({ status: 'draft', data: e.target.value })
-         console.log(e)
-         console.log(e.target.value)
-         console.log(this.state.data)
-         console.log("no blur")
-         this.props.handleTextChangeCallback(this.props.id, e.target.value)
+
+    onBlur(e) {
+
+        this.setState({ status: 'draft', data: e.target.value })
     }
 
-       
+
     saveIntent(data) {
+
         var foundIndex = this.props.dialogs.findIndex(x => x.id == this.props.id);
         this.props.dialogs[foundIndex].phrase = data;
-        this.props.dialogs[foundIndex].saved = true;    
+        this.props.dialogs[foundIndex].saved = true;
+
+        let dialogItem
+
+        if (this.state.hasSlot)
+            dialogItem = { id: 'dialogSlot' + (this.props.dialogs.length + 1), phrase: '', hasSlot: this.state.hasSlot, saved: false, type: 'slot' }
+
+        this.props.onSave(dialogItem);
     }
 
-    onSave () {
-        this.saveIntent (this.state.data)
+    onSave() {
         this.setState({ status: 'saved' })
-        this.props.onSave();
-    }   
+        this.saveIntent(this.state.data)
+    }
+
+    handleSaveVariableSwitch() {
+        this.setState({
+            hasSlot: !this.state.hasSlot
+        })
+
+    }
 
     render(props) {
 
         const { classes } = this.props;
-        console.log("no render")
-        console.log(this.state.data)
-        console.log(this.state.status)
+
         if (this.state.status == 'draft') {
-  
+
             return (
-                
+
                 <Grid container>
                     <Grid item xs={10} sm={10}>
                         <FormControl fullWidth size="small" className={classes.root}>
@@ -78,7 +84,12 @@ class IntentText extends Component {
                             <SaveIcon fontSize="large" variant="contained" color="primary" />
                         </IconButton  >
                     </Grid>
+                    <Grid>
+                        Salvar Resposta em variável ?
+                    <Switch color="primary" checked={this.state.hasSlot} onChange={() => this.handleSaveVariableSwitch()} />
+                    </Grid>
                 </Grid>
+
 
             )
 
@@ -86,8 +97,8 @@ class IntentText extends Component {
             return (
                 <Grid container>
                     <Grid item xs={12} sm={12}>
-                        <div style={{ display: "flex", alignItems: 'baseline',  width: "100%" }}>
-                            <div  style={{padding:10}}>
+                        <div style={{ display: "flex", alignItems: 'baseline', width: "100%" }}>
+                            <div style={{ padding: 10 }}>
                                 <AccountIcon color="primary" />
                             </div>
                             <div className={classes.card}>
@@ -101,5 +112,5 @@ class IntentText extends Component {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(IntentText);
+export default withStyles(styles, { withTheme: true })(Intent);
 

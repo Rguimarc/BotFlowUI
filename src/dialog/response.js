@@ -13,23 +13,22 @@ const styles = theme => ({
         boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
         transition: '0.3s',
         boxshadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
-        padding: '2px 16px',
-        background: '#e33371',
-        color: '#FFFFFF',
-        width: "100%"
+        padding: '2px 16px', 
+        width: "100%",
+        borderRadius: '25px',
+        borderRadius: '25px',
+        border: '2px solid #e33371'
     }
 });
 
-class BotText extends Component {
+class Response extends Component {
 
 
     constructor(props) {
 
         const defaultTheme = createMuiTheme({
             palette: {
-                primary: {
-                    main: "#000000"
-                }
+                
             }
         })
 
@@ -107,9 +106,7 @@ class BotText extends Component {
     onSaveRichText = (data) => {
 
         this.setState({ status: 'saved', data: stateToHTML(convertFromRaw(JSON.parse(data))) })
-
-        this.props.handleTextChangeCallback(this.props.id, stateToHTML(convertFromRaw(JSON.parse(data))))
-
+        
         this.saveIntent(data);
 
         this.props.onSave();
@@ -123,8 +120,7 @@ class BotText extends Component {
 
         if (this.state.status == 'draft') {
             return (
-                <Grid container>
-                     
+                <Grid container>                  
                     <Grid item >
                         <MuiThemeProvider theme={this.state.theme}>
                             <MUIRichTextEditor label="Digite a reposta do bot..." theme={this.state.theme} onSave={this.onSaveRichText}
@@ -146,7 +142,7 @@ class BotText extends Component {
                     <Grid item xs={12} sm={12}>
                         <div style={{ display: "flex", alignItems: 'baseline' ,width: "100%"}}>
                             <div style={{padding:10}}>
-                                <RedditIcon color="primary" />
+                                <RedditIcon color="secondary" />
                             </div>
                             <div className={classes.card}
                                 dangerouslySetInnerHTML={template}>
@@ -160,4 +156,4 @@ class BotText extends Component {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(BotText);
+export default withStyles(styles, { withTheme: true })(Response);
