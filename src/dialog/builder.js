@@ -4,13 +4,19 @@ import { withStyles } from '@material-ui/core/styles';
 import Options from './options';
 import Intent from './intent'
 import Response from './response';
+import Slot from './slot'
 
 const styles = theme => ({
     gridDialog: {
-        margin: 20
+        margin: 20,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent : 'center'
+ 
     },
     gridText: {
-        margin: 10
+        margin: 10,
+        width:'100%'
     },
     root: {
         "& .MuiFilledInput-root": {
@@ -131,7 +137,7 @@ class Builder extends Component {
                             else if (itemDialog.type == 'slot')
                                 return (
                                     <div className={classes.gridText}>
-
+                                        <Slot></Slot>
                                     </div>
                                 )
                         })}

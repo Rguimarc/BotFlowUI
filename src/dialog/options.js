@@ -14,6 +14,8 @@ const styles = theme => ({
         backgroundColor: 'rgba( 241, 90, 36, 1 )'
     },
     gridOptions: {
+        display : 'flex',
+        justifyContent: 'center' ,
         margin: 10
     }
 });
@@ -29,8 +31,8 @@ class Options extends Component {
             return (
 
                 <div className={classes.gridOptions}>
-                    <Grid container>
-                        <Grid item xs={3}>
+                    <Grid container  item xs={6}>
+                        <Grid item xs={4}>
                             <Button
                                 variant='contained'
                                 color='primary'
@@ -40,13 +42,13 @@ class Options extends Component {
                                 Usuário
                         </Button >
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={4}>
                             <SimpleMenu
                                 simpleResponse={this.props.createBotResponseCallback}>
                             </SimpleMenu>
                            
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid item xs={4}>
                             <Button
                                 variant="contained"
                                 color="primary"

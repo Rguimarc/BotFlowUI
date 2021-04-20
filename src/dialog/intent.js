@@ -69,9 +69,9 @@ class Intent extends Component {
 
             return (
 
-                <Grid container>
+                <Grid container style = {{marginLeft : '60px',marginTop : '10px'}}>
                     <Grid item xs={10} sm={10}>
-                        <FormControl fullWidth size="small" className={classes.root}>
+                        <FormControl fullWidth size="small" >
                             <TextField
                                 color='primary'
                                 key={this.props.id}

@@ -37,6 +37,7 @@ class Response extends Component {
                 MUIRichTextEditor: {
                     root: {
                         backgroundColor: "#ebebeb",
+                        width: '100%'    
                     },
                     container: {
                         display: "flex",
@@ -46,13 +47,14 @@ class Response extends Component {
                         backgroundColor: "#e33371",
                         padding: "20px",
                         height: "200px",
-                        maxHeight: "200px",
+                        maxHeight: "200px",                  
                         overflow: "auto",
                         color: '#FFFFFF'
+                    
                     },
                     toolbar: {
                         borderTop: "1px solid gray",
-                        backgroundColor: "#ebebeb"
+                        backgroundColor: "#ebebeb",
                     },
                     placeHolder: {
 
@@ -106,7 +108,7 @@ class Response extends Component {
     onSaveRichText = (data) => {
 
         this.setState({ status: 'saved', data: stateToHTML(convertFromRaw(JSON.parse(data))) })
-        
+
         this.saveIntent(data);
 
         this.props.onSave();
@@ -120,7 +122,7 @@ class Response extends Component {
 
         if (this.state.status == 'draft') {
             return (
-                <Grid container>                  
+                <Grid container  style={{paddingLeft : '60px',paddingTop:'10px',paddingRight: '40px'}}>                  
                     <Grid item >
                         <MuiThemeProvider theme={this.state.theme}>
                             <MUIRichTextEditor label="Digite a reposta do bot..." theme={this.state.theme} onSave={this.onSaveRichText}
