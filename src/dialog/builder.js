@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Box, Container, Grid } from '@material-ui/core';
+import { Box, Container, Grid, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Options from './options';
 import Intent from './intent'
@@ -11,12 +11,12 @@ const styles = theme => ({
         margin: 20,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent : 'center'
- 
+        justifyContent: 'center'
+
     },
     gridText: {
         margin: 10,
-        width:'100%'
+        width: '100%'
     },
     root: {
         "& .MuiFilledInput-root": {
@@ -61,20 +61,20 @@ class Builder extends Component {
 
         if (data)
             cpDialog = [...cpDialog, data]
- 
+
         this.setState({
             dialogs: cpDialog,
             mode: 'selection'
         })
     }
- 
+
     createDecisor() {
         console.log('CREATE DECISOR')
         console.log(this.props.nodeInfo)
         this.props.createDecisorNodeCallback(this.props.nodeInfo);
     }
 
-  
+
     saveIntentCallback = (data) => {
         this.saveIntent(data)
     }
@@ -101,56 +101,56 @@ class Builder extends Component {
         return (
 
             <Container>
-                <Box borderColor="grey.500" height='100%' width='100%'  >
+                <Paper elevation={3} style = {{padding:4}}>
+                    <Box borderColor="grey.500" height='100%' width='100%'  >
 
-                    <Grid className={classes.gridDialog}>
-                        {this.state.dialogs.map((itemDialog) => {
+                        <Grid className={classes.gridDialog}>
+                            {this.state.dialogs.map((itemDialog) => {
 
-                            if (itemDialog.type == 'bot')
-                                return (
+                                if (itemDialog.type == 'bot')
+                                    return (
 
-                                    <div className={classes.gridText}>
-                                        <Response
-                                            dialogs={this.state.dialogs}
-                                            status={itemDialog.saved == false ? 'draft' : 'saved'}
-                                            onSave={() => this.saveIntentCallback()}
-                                            handleTextChangeCallback={() => this.props.handleTextChangeCallback}
-                                            id={itemDialog.id}>
-                                        </Response>
-                                    </div>)
+                                        <div className={classes.gridText}>
+                                            <Response
+                                                dialogs={this.state.dialogs}
+                                                status={itemDialog.saved == false ? 'draft' : 'saved'}
+                                                onSave={() => this.saveIntentCallback()}
+                                                handleTextChangeCallback={() => this.props.handleTextChangeCallback}
+                                                id={itemDialog.id}>
+                                            </Response>
+                                        </div>)
 
-                            else if (itemDialog.type == 'intent')
+                                else if (itemDialog.type == 'intent')
 
-                                return (
-                                    <div className={classes.gridText}>
-                                        <Intent
-                                            dialogs={this.state.dialogs}
-                                            hasSlot={itemDialog.hasSlot}
-                                            status={itemDialog.saved == false ? 'draft' : 'saved'}
-                                            onSave={(data) => this.saveIntentCallback(data)}
-                                            handleTextChangeCallback={() => this.props.handleTextChangeCallback}
-                                            id={itemDialog.id}
-                                        ></Intent>
-                                    </div>
-                                )
+                                    return (
+                                        <div className={classes.gridText}>
 
-                            else if (itemDialog.type == 'slot')
-                                return (
-                                    <div className={classes.gridText}>
-                                        <Slot></Slot>
-                                    </div>
-                                )
-                        })}
+                                            <Intent
+                                                dialogs={this.state.dialogs}
+                                                hasSlot={itemDialog.hasSlot} 
+                                                slot={itemDialog.slot}
+                                                status={itemDialog.saved == false ? 'draft' : 'saved'}
+                                                onSave={(data) => this.saveIntentCallback(data)}
+                                                handleTextChangeCallback={() => this.props.handleTextChangeCallback}
+                                                id={itemDialog.id}
+                                            ></Intent>
 
-                    </Grid>
+                                        </div>
+                                    )
 
-                    <Options mode={this.state.mode}
-                        createIntentCallback={this.createIntentCallback}
-                        createBotResponseCallback={this.createBotResponseCallback}
-                        createDecisorCallback={this.createDecisorCallback}>
-                    </Options>
 
-                </Box>
+                            })}
+
+                        </Grid>
+
+                        <Options mode={this.state.mode}
+                            createIntentCallback={this.createIntentCallback}
+                            createBotResponseCallback={this.createBotResponseCallback}
+                            createDecisorCallback={this.createDecisorCallback}>
+                        </Options>
+
+                    </Box>
+                </Paper>
             </Container >
         )
 

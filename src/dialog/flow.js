@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import './index.css'
+import '../index.css'
 import ReactFlow from 'react-flow-renderer';
 import Builder from './builder';
 
@@ -16,7 +16,7 @@ class Flow extends Component {
           data: { label: <Builder nodeInfo={this.nodeInfo} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
           position: { x: 250, y: 250 },
           style: {
-            width: 600,
+            width: 700,
           },
         }
       ]

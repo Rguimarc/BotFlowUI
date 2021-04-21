@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import AddIcon from '@material-ui/icons/Add'
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, IconButton, InputLabel, MenuItem, FormControl, Select, TextField ,Typography} from '@material-ui/core';
+import { Grid, IconButton, InputLabel, MenuItem, FormControl, Select, TextField, Typography } from '@material-ui/core';
 
 const styles = theme => ({
 
@@ -18,7 +18,7 @@ const styles = theme => ({
     },
     inputSlot: {
 
-            width: '80%',
+        width: '80%',
 
     }
 });
@@ -31,9 +31,25 @@ class Slot extends Component {
         super(props)
 
         this.state = {
-
+            value : this.props.slot.value,
+            type : this.props.slot.type
         }
     }
+
+    handleTextFieldChange = (e) => {
+        this.setState({
+            value: e.target.value,
+        });
+    }
+
+    handleSelectChange = (e) => {
+       
+        console.log(e)
+        this.setState({
+            type: e.target.value,
+        });
+    }
+
 
     render(props) {
 
@@ -42,8 +58,8 @@ class Slot extends Component {
         return (
 
 
-            <Grid container style={{ marginLeft: '60px', marginTop: '10px' }}>
-                <Grid item xs={12} sm={12}>  <Typography variant="subtitle2" display="block" gutterBottom>Configure a váriavel a ser preenchida: </Typography></Grid>
+            <Grid container style={{ marginTop: 10 }}>
+                <Grid item xs={12} sm={12} style={{display:'flex', justify:'flexflex-start'}}><Typography variant="subtitle2" display="block" gutterBottom>Configure a váriavel a ser preenchida: </Typography></Grid>
                 <Grid item xs={1} sm={1}>
 
                     <IconButton id='btnUserIntent' size="small"  >
@@ -53,9 +69,11 @@ class Slot extends Component {
                 <Grid item xs={5} sm={6}>
                     <FormControl fullWidth size="small" className={classes.inputSlot}>
                         <TextField
+                            onChange={(e) => { this.handleTextFieldChange(e) }}
                             style={{ paddingTop: "20px" }}
                             color='primary'
-                            key={this.props.id}
+                            key={this.props.id + 'slot'}
+                            value={this.state.value}
                         />
                     </FormControl>
                 </Grid>
@@ -65,7 +83,9 @@ class Slot extends Component {
                         <InputLabel id="demo-simple-select-label">Tipo</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
-                            id="demo-simple-select">
+                            id="demo-simple-select"
+                            value={this.state.type}
+                            onChange={(e) => { this.handleSelectChange(e) }}>
                             <MenuItem value={10}>Nome</MenuItem>
                             <MenuItem value={20}>Email</MenuItem>
                             <MenuItem value={30}>CPF</MenuItem>

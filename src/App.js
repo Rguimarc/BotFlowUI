@@ -1,24 +1,15 @@
 
 import './App.css';
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import MenuIcon from '@material-ui/icons/Menu'
-import IconButton from '@material-ui/core/IconButton'
-import { Button, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import {Button, Typography,ListItem,ListItemIcon,ListItemText,Drawer,Toolbar,AppBar,IconButton,Divider,List} from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu'
 import BookIcon from '@material-ui/icons/Book';
 import ForumIcon from '@material-ui/icons/Forum';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
-import Drawer from '@material-ui/core/Drawer';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import Container from '@material-ui/core/Container';
 import Builder from './dialog/builder';
- 
+import Flow from './dialog/flow';
 
 const drawerWidth = 240;
 
@@ -98,7 +89,7 @@ function App() {
       </Drawer>
       <Container>
       <div style={{ padding: 200 }}>
-         <Builder></Builder>
+         <Flow></Flow>
       </div>
 
       </Container>

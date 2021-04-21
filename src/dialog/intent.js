@@ -4,6 +4,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import AccountIcon from '@material-ui/icons/AccountCircle';
 import { withStyles } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
+import Slot from './slot'
 
 const styles = theme => ({
     card: {
@@ -25,7 +26,8 @@ class Intent extends Component {
 
         this.state = {
             status: this.props.status,
-            hasSlot: this.props.hasSlot
+            hasSlot: this.props.hasSlot,
+            slot: this.props.slot,
         }
     }
 
@@ -40,13 +42,9 @@ class Intent extends Component {
         var foundIndex = this.props.dialogs.findIndex(x => x.id == this.props.id);
         this.props.dialogs[foundIndex].phrase = data;
         this.props.dialogs[foundIndex].saved = true;
-
-        let dialogItem
-
-        if (this.state.hasSlot)
-            dialogItem = { id: 'dialogSlot' + (this.props.dialogs.length + 1), phrase: '', hasSlot: this.state.hasSlot, saved: false, type: 'slot' }
-
-        this.props.onSave(dialogItem);
+        this.props.dialogs[foundIndex].slot = this.state.slot;
+        this.props.dialogs[foundIndex].hasSlot = this.state.hasSlot;
+        this.props.onSave()
     }
 
     onSave() {
@@ -55,10 +53,20 @@ class Intent extends Component {
     }
 
     handleSaveVariableSwitch() {
-        this.setState({
-            hasSlot: !this.state.hasSlot
-        })
 
+        let slot = undefined
+
+        if (this.state.hasSlot == false) {
+            slot = {
+                value: '',
+                type: ''
+            }
+        }
+
+        this.setState({
+            hasSlot: !this.state.hasSlot,
+            slot: slot
+        })
     }
 
     render(props) {
@@ -69,7 +77,7 @@ class Intent extends Component {
 
             return (
 
-                <Grid container style = {{marginLeft : '60px',marginTop : '10px'}}>
+                <Grid container style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
                     <Grid item xs={10} sm={10}>
                         <FormControl fullWidth size="small" >
                             <TextField
@@ -88,6 +96,16 @@ class Intent extends Component {
                         Salvar Resposta em variável ?
                     <Switch color="primary" checked={this.state.hasSlot} onChange={() => this.handleSaveVariableSwitch()} />
                     </Grid>
+                    {
+                        this.state.hasSlot ?
+                            <Grid item xs={12} sm={12}>
+                                <Slot
+                                    slot={this.state.slot}
+                                    id={this.props.id}>
+                                </Slot>
+                            </Grid> : null
+                    }
+
                 </Grid>
 
 
