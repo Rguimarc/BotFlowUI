@@ -5,19 +5,21 @@ import React, { Component } from "react"
 import { withStyles } from '@material-ui/core/styles';
 import { createMuiTheme, Theme, MuiThemeProvider } from '@material-ui/core/styles'
 import RedditIcon from '@material-ui/icons/Reddit';
-import Grid from '@material-ui/core/Grid';
+import { Paper, Grid } from '@material-ui/core';
 
 const styles = theme => ({
     card: {
         /* Add shadows to create the "card" effect */
-        boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+        //boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
         transition: '0.3s',
-        boxshadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
-        padding: '2px 16px', 
+        //boxshadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
+        padding: '2px 16px',
         width: "100%",
-        borderRadius: '25px',
-        borderRadius: '25px',
-        border: '2px solid #e33371'
+        //borderRadius: '25px',
+        borderRadius: '10px',
+        border: '2px solid #e33371',
+        display: 'flex',
+        justify: 'flexflex-start'
     }
 });
 
@@ -28,7 +30,7 @@ class Response extends Component {
 
         const defaultTheme = createMuiTheme({
             palette: {
-                
+
             }
         })
 
@@ -37,7 +39,7 @@ class Response extends Component {
                 MUIRichTextEditor: {
                     root: {
                         backgroundColor: "#ebebeb",
-                        width: '100%'    
+                        width: '100%'
                     },
                     container: {
                         display: "flex",
@@ -47,10 +49,9 @@ class Response extends Component {
                         backgroundColor: "#e33371",
                         padding: "20px",
                         height: "200px",
-                        maxHeight: "200px",                  
+                        maxHeight: "200px",
                         overflow: "auto",
                         color: '#FFFFFF'
-                    
                     },
                     toolbar: {
                         borderTop: "1px solid gray",
@@ -122,7 +123,7 @@ class Response extends Component {
 
         if (this.state.status == 'draft') {
             return (
-                <Grid container  style={{paddingLeft : '60px',paddingTop:'10px',paddingRight: '40px'}}>                  
+                <Grid container style={{ paddingLeft: '60px', paddingTop: '10px', paddingRight: '40px' }}>
                     <Grid item >
                         <MuiThemeProvider theme={this.state.theme}>
                             <MUIRichTextEditor label="Digite a reposta do bot..." theme={this.state.theme} onSave={this.onSaveRichText}
@@ -142,13 +143,13 @@ class Response extends Component {
             return (
                 <Grid container>
                     <Grid item xs={12} sm={12}>
-                        <div style={{ display: "flex", alignItems: 'baseline' ,width: "100%"}}>
-                            <div style={{padding:10}}>
+                        <div style={{ display: "flex", alignItems: 'baseline', width: "100%" }}>
+                            <div style={{ padding: 10 }}>
                                 <RedditIcon color="secondary" />
                             </div>
-                            <div className={classes.card}
+                            <Paper className={classes.card} elevation={3}
                                 dangerouslySetInnerHTML={template}>
-                            </div>
+                            </Paper>
                         </div>
                     </Grid>
                 </Grid>

@@ -1,20 +1,42 @@
 import React, { Component } from 'react';
-import { FormControl, IconButton, Grid, TextField } from '@material-ui/core';
+import { FormControl, IconButton, Grid, TextField, Paper, Button, Typography } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import AccountIcon from '@material-ui/icons/AccountCircle';
 import { withStyles } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import Slot from './slot'
+import styled from '@emotion/styled'
+import CloseIcon from '@material-ui/icons/Close';
+import slot from './slot';
+
+const PillContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline; 
+`
+const Pill = styled.div`
+  display: flex;
+  background-color: #b2acfa;
+  border-radius: 10px;
+  padding: 4px;
+  margin-right: 5px;
+  margin-top: 5px;
+  align-items: center;
+  overflow-wrap: anywhere;
+`
+
 
 const styles = theme => ({
     card: {
-        boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+        //boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
         transition: '0.3s',
-        boxshadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
+        //boxshadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
         padding: '2px 16px',
         width: "100%",
-        borderRadius: '25px',
-        border: '2px solid #3f50b5'
+        borderRadius: '10px',
+        border: '2px solid #3f50b5',
+        display: 'flex',
+        justify: 'flexflex-start'
     }
 });
 
@@ -24,10 +46,12 @@ class Intent extends Component {
 
         super(props)
 
+        console.log("construtor")
+        console.log(this.props.slot)
         this.state = {
             status: this.props.status,
             hasSlot: this.props.hasSlot,
-            slot: this.props.slot,
+            slot: this.props.slot ? this.props.slot : []
         }
     }
 
@@ -42,8 +66,14 @@ class Intent extends Component {
         var foundIndex = this.props.dialogs.findIndex(x => x.id == this.props.id);
         this.props.dialogs[foundIndex].phrase = data;
         this.props.dialogs[foundIndex].saved = true;
+
+        console.log("no save intent")
+
+
         this.props.dialogs[foundIndex].slot = this.state.slot;
         this.props.dialogs[foundIndex].hasSlot = this.state.hasSlot;
+
+        console.log(this.state)
         this.props.onSave()
     }
 
@@ -54,25 +84,32 @@ class Intent extends Component {
 
     handleSaveVariableSwitch() {
 
-        let slot = undefined
-
-        if (this.state.hasSlot == false) {
-            slot = {
-                value: '',
-                type: ''
-            }
-        }
 
         this.setState({
-            hasSlot: !this.state.hasSlot,
-            slot: slot
+            hasSlot: !this.state.hasSlot
         })
+    }
+
+
+    saveSlot = (slot) => {
+
+        console.log('no save slot')
+        console.log(slot)
+        this.setState({
+            slot: [...this.state.slot, slot]
+        })
+    }
+
+    saveSlotCallback = (data) => {
+        console.log('no save slot callbk')
+        this.saveSlot(data)
     }
 
     render(props) {
 
         const { classes } = this.props;
-
+        console.log('render')
+        console.log(this.state.slot)
         if (this.state.status == 'draft') {
 
             return (
@@ -100,6 +137,7 @@ class Intent extends Component {
                         this.state.hasSlot ?
                             <Grid item xs={12} sm={12}>
                                 <Slot
+                                    saveSlotCallback={(data) => this.saveSlotCallback(data)}
                                     slot={this.state.slot}
                                     id={this.props.id}>
                                 </Slot>
@@ -119,12 +157,33 @@ class Intent extends Component {
                             <div style={{ padding: 10 }}>
                                 <AccountIcon color="primary" />
                             </div>
-                            <div className={classes.card}>
+                            <Paper className={classes.card} elevation={3}>
                                 <p>{this.state.data}</p>
-                            </div>
+                            </Paper>
                         </div>
                     </Grid>
+                    <Grid item xs={12} sm={12}>
+                        {
+                            this.state.hasSlot ?
+                                <PillContainer style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
+                                    <Typography variant="subtitle2" display="block" gutterBottom><p style={{ paddingRight: 10 }}>salva na variável: </p></Typography>
+                                    {this.state.slot.map((o) => (
+                                        <Pill key={o.value}>
+                                            <div>{o.value} - {o.type}</div>
+                                          
+
+                                            <IconButton size='small'>
+                                                <CloseIcon />
+                                            </IconButton>
+
+                                        </Pill>
+                                    ))}
+                                </PillContainer> : null
+                        }
+
+                    </Grid>
                 </Grid>
+
             )
         }
     }

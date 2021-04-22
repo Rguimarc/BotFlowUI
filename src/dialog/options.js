@@ -7,17 +7,17 @@ import SimpleMenu from '../menuOptions';
 
 const styles = theme => ({
     buttonBot: {
-        width: '80%'
+        width: '100%'
     },
-    buttonDecision: {
-        width: '80%',
+    buttonDecision: {   
+        width: '100%',
         backgroundColor: 'rgba( 241, 90, 36, 1 )'
     },
     gridOptions: {
         display : 'flex',
         justifyContent: 'center' ,
         margin: 10
-    }
+    }   
 });
 
 class Options extends Component {

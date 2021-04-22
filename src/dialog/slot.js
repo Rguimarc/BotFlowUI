@@ -31,8 +31,8 @@ class Slot extends Component {
         super(props)
 
         this.state = {
-            value : this.props.slot.value,
-            type : this.props.slot.type
+            value: this.props.slot.value,
+            type: this.props.slot.type
         }
     }
 
@@ -43,13 +43,25 @@ class Slot extends Component {
     }
 
     handleSelectChange = (e) => {
-       
-        console.log(e)
+
         this.setState({
             type: e.target.value,
         });
     }
 
+    handleAddClick = () => {
+
+        let newSlot = undefined
+
+        newSlot = {
+            value: this.state.value,
+            type:  this.state.type,
+        }  
+    
+ 
+        this.props.saveSlotCallback(newSlot);
+
+    }
 
     render(props) {
 
@@ -59,11 +71,11 @@ class Slot extends Component {
 
 
             <Grid container style={{ marginTop: 10 }}>
-                <Grid item xs={12} sm={12} style={{display:'flex', justify:'flexflex-start'}}><Typography variant="subtitle2" display="block" gutterBottom>Configure a váriavel a ser preenchida: </Typography></Grid>
+                <Grid item xs={12} sm={12} style={{ display: 'flex', justify: 'flexflex-start' }}><Typography variant="subtitle2" display="block" gutterBottom>Configure a váriavel a ser preenchida: </Typography></Grid>
                 <Grid item xs={1} sm={1}>
 
                     <IconButton id='btnUserIntent' size="small"  >
-                        <AddIcon fontSize="large" variant="contained" className={classes.buttonAdd} />
+                        <AddIcon  onClick={() => this.handleAddClick()} fontSize="large" variant="contained" className={classes.buttonAdd} />
                     </IconButton  >
                 </Grid>
                 <Grid item xs={5} sm={6}>

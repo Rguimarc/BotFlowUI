@@ -33,9 +33,8 @@ export default function SimpleMenu(props) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <MenuItem onClick={() => { localProps.simpleResponse() }}>Resposta Simples</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem onClick={() => { localProps.simpleResponse() }}>Frase</MenuItem>
+                <MenuItem onClick={handleClose}>Ação</MenuItem>
             </Menu>
         </div>
     );
