@@ -22,6 +22,7 @@ export default function SimpleMenu(props) {
                 style={{ width: '80%' }}
                 color='palette.secondary.light'
                 onClick={handleClick}
+                style= {{  marginRight: '15px'}}
                 id='btnBotResponse'>
                 Bot
             </Button>

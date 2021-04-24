@@ -10,7 +10,7 @@ import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import Container from '@material-ui/core/Container';
 import Builder from './dialog/builder';
 import Flow from './dialog/flow';
-
+import DemoQueryBuilder from './decisor'
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({

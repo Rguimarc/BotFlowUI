@@ -6,18 +6,24 @@ import CallSplitIcon from '@material-ui/icons/CallSplit';
 import SimpleMenu from '../menuOptions';
 
 const styles = theme => ({
-    buttonBot: {
-        width: '100%'
+    buttonOption: {
+        marginRight: '15px'
     },
-    buttonDecision: {   
-        width: '100%',
+    buttonDecision: {
+
         backgroundColor: 'rgba( 241, 90, 36, 1 )'
     },
     gridOptions: {
-        display : 'flex',
-        justifyContent: 'center' ,
-        margin: 10
-    }   
+        display: 'flex',
+        justifyContent: 'center',
+
+
+    },
+    gridOptions2: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    }
 });
 
 class Options extends Component {
@@ -31,34 +37,34 @@ class Options extends Component {
             return (
 
                 <div className={classes.gridOptions}>
-                    <Grid container  item xs={6}>
-                        <Grid item xs={4}>
-                            <Button
-                                variant='contained'
-                                color='primary'
-                                id='btnUserIntent'
-                                width='100%'
-                                onClick={() => { this.props.createIntentCallback() }}>
-                                Usuário
+                    <div className={classes.gridOptions2}>
+
+
+                        <Button className={classes.buttonOption}
+                            variant='contained'
+                            color='primary'
+                            id='btnUserIntent'
+                            width='100%'
+                            onClick={() => { this.props.createIntentCallback() }}>
+                            Usuário
                         </Button >
-                        </Grid>
-                        <Grid item xs={4}>
-                            <SimpleMenu
-                                simpleResponse={this.props.createBotResponseCallback}>
-                            </SimpleMenu>
-                           
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                className={classes.buttonDecision}
-                                onClick={() => { this.props.createDecisorCallback() }}
-                                endIcon={<CallSplitIcon></CallSplitIcon>}>
-                                decisao
+
+                        <SimpleMenu
+                            simpleResponse={this.props.createBotResponseCallback}>
+                        </SimpleMenu>
+
+
+
+                        <Button
+                            className={classes.buttonOption}
+                            variant="contained"
+                            color="primary"
+                            className={classes.buttonDecision}
+                            onClick={() => { this.props.createDecisorCallback() }}>
+                            decisao
                             </Button>
-                        </Grid>
-                    </Grid>
+
+                    </div>
                 </div>
             )
         else

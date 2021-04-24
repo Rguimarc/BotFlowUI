@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Box, Container, Grid, Paper } from '@material-ui/core';
+import { Box, Container, Grid, Paper, Button, IconButton } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Options from './options';
 import Intent from './intent'
 import Response from './response';
-import Slot from './slot'
+import Decisor from './decisor';
+
 
 const styles = theme => ({
     gridDialog: {
@@ -17,12 +18,8 @@ const styles = theme => ({
     gridText: {
         margin: 10,
         width: '100%'
-    },
-    root: {
-        "& .MuiFilledInput-root": {
-            background: "rgba( 249, 240, 255, 1 )",
-        }
-    }
+    } 
+  
 });
 
 class Builder extends Component {
@@ -72,6 +69,12 @@ class Builder extends Component {
         console.log('CREATE DECISOR')
         console.log(this.props.nodeInfo)
         this.props.createDecisorNodeCallback(this.props.nodeInfo);
+
+        // this.setState({
+        //     mode: 'createIntent',
+        //     dialogs: [...this.state.dialogs, { id: 'dialogBot' + (this.state.dialogs.length + 1), phrase: '', saved: false, type: 'decisor' }]
+        // })
+
     }
 
 
@@ -101,10 +104,10 @@ class Builder extends Component {
         return (
 
             <Container>
-                <Paper elevation={3} style = {{padding:4}}>
-                    <Box borderColor="grey.500" height='100%' width='100%'  >
+                <Paper elevation={3} style={{ padding: 4 }}>
+                    <Box className={classes.gridDialog}>
 
-                        <Grid className={classes.gridDialog}>
+                        <Grid >
                             {this.state.dialogs.map((itemDialog) => {
 
                                 if (itemDialog.type == 'bot')
@@ -127,7 +130,7 @@ class Builder extends Component {
 
                                             <Intent
                                                 dialogs={this.state.dialogs}
-                                                hasSlot={itemDialog.hasSlot} 
+                                                hasSlot={itemDialog.hasSlot}
                                                 slot={itemDialog.slot}
                                                 status={itemDialog.saved == false ? 'draft' : 'saved'}
                                                 onSave={(data) => this.saveIntentCallback(data)}
@@ -137,6 +140,10 @@ class Builder extends Component {
 
                                         </div>
                                     )
+                                else if (itemDialog.type == 'decisor') {
+                                    return (
+                                        <Decisor></Decisor>)
+                                }
 
 
                             })}
@@ -149,6 +156,8 @@ class Builder extends Component {
                             createDecisorCallback={this.createDecisorCallback}>
                         </Options>
 
+ 
+                       
                     </Box>
                 </Paper>
             </Container >

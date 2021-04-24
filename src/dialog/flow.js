@@ -2,9 +2,21 @@ import React, { Component } from 'react'
 import '../index.css'
 import ReactFlow from 'react-flow-renderer';
 import Builder from './builder';
+import StartNode from '../startNode';
+import { withStyles } from '@material-ui/core/styles';
+ 
+const styles = theme => ({
+  divFlow : {
+    "& .react-flow__handle.connectable" : {
+      opacity:0
+  }
+}
+ 
+});
 
 
 class Flow extends Component {
+
 
   constructor(props) {
     super(props);
@@ -13,13 +25,15 @@ class Flow extends Component {
       elements: [
         {
           id: '1',
-          data: { label: <Builder nodeInfo={this.nodeInfo} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
-          position: { x: 250, y: 250 },
+          data: { label: <StartNode nodeInfo={this.nodeInfo} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
+          position: { x: 200, y: 200 },
+          type: 'start',
           style: {
-            width: 700,
+            width: 500,
+            
           },
         }
-      ]
+      ] 
     }
 
     this.addNode1 = this.addNode1.bind(this);
@@ -36,7 +50,8 @@ class Flow extends Component {
     }
     let node1 = {
       id: String(nodeInfo.id + 1),
-      data: { label: <Builder nodeInfo={newNodeinfo1} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
+      data: { label: <StartNode nodeInfo={this.nodeInfo} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
+      type: 'start',
       position: { x: nodeInfo.x - 200, y: nodeInfo.y + 200 },
       style: {
         width: 600,
@@ -49,8 +64,9 @@ class Flow extends Component {
 
     let node2 = {
       id: String(nodeInfo.id + 2),
-      data: { label: <Builder nodeInfo={newNodeinfo2} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
+      data: { label: <StartNode nodeInfo={this.nodeInfo} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
       position: { x: nodeInfo.x + 200, y: nodeInfo.y + 200 },
+      type: 'start',
       style: {
         width: 600,
       },
@@ -71,8 +87,9 @@ class Flow extends Component {
     })
 
   }
-
+ 
   createDecisorNodeCallback = (nodeInfo) => {
+    console.log("AFESf")
     this.createDecisorNode(nodeInfo)
   }
 
@@ -103,17 +120,21 @@ class Flow extends Component {
 
   render() {
     console.log(this.state.elements)
+    const { classes } = this.props;
     return (
-      <div className="App" style={{ height: 6000,width: 6000 }}>
+      <div className= {classes.divFlow} style={{ height: 6000, width: 6000 }}>
         <button onClick={this.addNode1}>addNode1</button>
         <button onClick={this.addNode2}>addNode2</button>
-        <ReactFlow elements={this.state.elements} />
+        <ReactFlow
+     
+          elements={this.state.elements} />
 
       </div>
     )
   }
 }
 
-export default Flow;
+export default withStyles(styles, { withTheme: true })(Flow);
 
 
+ 

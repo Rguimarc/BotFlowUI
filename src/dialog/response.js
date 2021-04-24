@@ -19,7 +19,7 @@ const styles = theme => ({
         borderRadius: '10px',
         border: '2px solid #e33371',
         display: 'flex',
-        justify: 'flexflex-start'
+        justify: 'flex-start'
     }
 });
 
@@ -48,7 +48,7 @@ class Response extends Component {
                     editor: {
                         backgroundColor: "#e33371",
                         padding: "20px",
-                        height: "200px",
+                        height: "100px",
                         maxHeight: "200px",
                         overflow: "auto",
                         color: '#FFFFFF'
