@@ -4,8 +4,6 @@ import Builder from './dialog/builder';
 import CallSplitIcon from '@material-ui/icons/CallSplit';
 import { IconButton } from '@material-ui/core';
 
-
-
 class StartNode extends Component {
 
     constructor(props) {
@@ -16,18 +14,16 @@ class StartNode extends Component {
 
         }
     }
-    
+
     createDecisor() {
-        console.log('CREATE DECISOR')
-        console.log(this.props.nodeInfo)
         this.props.createDecisorNodeCallback(this.props.nodeInfo);
     }
 
     render(props) {
         return (
             <>
-                <Builder>
-
+                <Builder
+                    createDecisorNodeCallback={(data,nodeInfo) => this.props.createDecisorNodeCallback(data,nodeInfo)}>
                 </Builder>
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>

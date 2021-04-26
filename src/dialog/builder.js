@@ -6,7 +6,6 @@ import Intent from './intent'
 import Response from './response';
 import Decisor from './decisor';
 
-
 const styles = theme => ({
     gridDialog: {
         margin: 20,
@@ -18,8 +17,8 @@ const styles = theme => ({
     gridText: {
         margin: 10,
         width: '100%'
-    } 
-  
+    }
+
 });
 
 class Builder extends Component {
@@ -30,6 +29,7 @@ class Builder extends Component {
 
         this.state = {
             mode: 'selection',
+            decisor: [],
             dialogs: []
         }
 
@@ -65,23 +65,28 @@ class Builder extends Component {
         })
     }
 
-    createDecisor() {
-        console.log('CREATE DECISOR')
-        console.log(this.props.nodeInfo)
-        this.props.createDecisorNodeCallback(this.props.nodeInfo);
+    saveDecisor(data) {
 
-        // this.setState({
-        //     mode: 'createIntent',
-        //     dialogs: [...this.state.dialogs, { id: 'dialogBot' + (this.state.dialogs.length + 1), phrase: '', saved: false, type: 'decisor' }]
-        // })
+        this.props.createDecisorNodeCallback(data);
+
+        this.setState({
+            mode: 'createIntent',
+            decisor: [...this.state.decisor, data]
+        })
 
     }
 
+    createDecisor() {
+
+        this.setState({
+            mode: 'createIntent',
+            dialogs: [...this.state.dialogs, { id: 'decisorBot' + (this.state.dialogs.length + 1), phrase: '', conditions: [], saved: false, type: 'decisor' }]
+        })
+    }
 
     saveIntentCallback = (data) => {
         this.saveIntent(data)
     }
-
 
     createIntentCallback = () => {
         this.createIntent()
@@ -96,9 +101,12 @@ class Builder extends Component {
         this.createDecisor()
     }
 
+    saveDecisorCallback = (data) => {
+        this.saveDecisor(data)
+    }
+
     render() {
 
-        console.log(this.state.dialogs)
         const { classes } = this.props;
 
         return (
@@ -142,7 +150,13 @@ class Builder extends Component {
                                     )
                                 else if (itemDialog.type == 'decisor') {
                                     return (
-                                        <Decisor></Decisor>)
+                                        <div className={classes.gridText}>
+                                            <Decisor id={itemDialog.id}
+                                                status={itemDialog.saved == false ? 'draft' : 'saved'}
+                                                dialogs={this.state.dialogs}
+                                                saveDecisorCallback={(data) => this.saveDecisorCallback(data)}>
+                                            </Decisor>
+                                        </div>)
                                 }
 
 
@@ -156,8 +170,8 @@ class Builder extends Component {
                             createDecisorCallback={this.createDecisorCallback}>
                         </Options>
 
- 
-                       
+
+
                     </Box>
                 </Paper>
             </Container >

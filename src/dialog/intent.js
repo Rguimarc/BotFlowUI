@@ -28,9 +28,7 @@ const Pill = styled.div`
 
 const styles = theme => ({
     card: {
-        //boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
         transition: '0.3s',
-        //boxshadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
         padding: '2px 16px',
         width: "100%",
         borderRadius: '10px',
@@ -46,8 +44,6 @@ class Intent extends Component {
 
         super(props)
 
-        console.log("construtor")
-        console.log(this.props.slot)
         this.state = {
             status: this.props.status,
             hasSlot: this.props.hasSlot,
@@ -56,24 +52,16 @@ class Intent extends Component {
     }
 
     onBlur(e) {
-
         this.setState({ status: 'draft', data: e.target.value })
     }
-
 
     saveIntent(data) {
 
         var foundIndex = this.props.dialogs.findIndex(x => x.id == this.props.id);
         this.props.dialogs[foundIndex].phrase = data;
         this.props.dialogs[foundIndex].saved = true;
-
-        console.log("no save intent")
-
-
         this.props.dialogs[foundIndex].slot = this.state.slot;
         this.props.dialogs[foundIndex].hasSlot = this.state.hasSlot;
-
-        console.log(this.state)
         this.props.onSave()
     }
 
@@ -90,26 +78,20 @@ class Intent extends Component {
         })
     }
 
-
     saveSlot = (slot) => {
-
-        console.log('no save slot')
-        console.log(slot)
         this.setState({
             slot: [...this.state.slot, slot]
         })
     }
 
     saveSlotCallback = (data) => {
-        console.log('no save slot callbk')
         this.saveSlot(data)
     }
 
     render(props) {
 
         const { classes } = this.props;
-        console.log('render')
-        console.log(this.state.slot)
+
         if (this.state.status == 'draft') {
 
             return (

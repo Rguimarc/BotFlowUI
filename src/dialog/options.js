@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Button, IconButton } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
-import CallSplitIcon from '@material-ui/icons/CallSplit';
 import SimpleMenu from '../menuOptions';
 
 const styles = theme => ({
@@ -62,7 +60,7 @@ class Options extends Component {
                             className={classes.buttonDecision}
                             onClick={() => { this.props.createDecisorCallback() }}>
                             decisao
-                            </Button>
+                        </Button>
 
                     </div>
                 </div>

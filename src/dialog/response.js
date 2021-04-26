@@ -9,13 +9,9 @@ import { Paper, Grid } from '@material-ui/core';
 
 const styles = theme => ({
     card: {
-        /* Add shadows to create the "card" effect */
-        //boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
         transition: '0.3s',
-        //boxshadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
         padding: '2px 16px',
         width: "100%",
-        //borderRadius: '25px',
         borderRadius: '10px',
         border: '2px solid #e33371',
         display: 'flex',
@@ -109,9 +105,7 @@ class Response extends Component {
     onSaveRichText = (data) => {
 
         this.setState({ status: 'saved', data: stateToHTML(convertFromRaw(JSON.parse(data))) })
-
         this.saveIntent(data);
-
         this.props.onSave();
     }
 
