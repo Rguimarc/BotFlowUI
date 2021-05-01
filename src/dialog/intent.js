@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
-import { FormControl, IconButton, Grid, TextField, Paper, Button, Typography } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
-import AccountIcon from '@material-ui/icons/AccountCircle';
+import React, { useState, useContext } from 'react';
+import { FormControl, IconButton, Grid, TextField, Paper, Typography,Switch } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import Switch from '@material-ui/core/Switch';
 import Slot from './slot'
 import styled from '@emotion/styled'
 import CloseIcon from '@material-ui/icons/Close';
-import slot from './slot';
+import SaveIcon from '@material-ui/icons/Save';
+import AccountIcon from '@material-ui/icons/AccountCircle';
+import InteractionBlockContext from './interactionBlockContext';
 
 const PillContainer = styled.div`
   display: flex;
@@ -25,7 +24,6 @@ const Pill = styled.div`
   overflow-wrap: anywhere;
 `
 
-
 const styles = theme => ({
     card: {
         transition: '0.3s',
@@ -38,137 +36,130 @@ const styles = theme => ({
     }
 });
 
-class Intent extends Component {
+const Intent = (props) => {
 
-    constructor(props) {
+    const { interactionContext, setInteractionContext } = useContext(InteractionBlockContext);
 
-        super(props)
+    const [itentState, setIntentState] = useState({
+        status: props.status,
+        hasSlot: props.hasSlot,
+        slot: props.slot ? props.slot : [],
+        data: ''
+    });
 
-        this.state = {
-            status: this.props.status,
-            hasSlot: this.props.hasSlot,
-            slot: this.props.slot ? this.props.slot : []
-        }
+    function onBlur(e) {
+        setIntentState({ status: 'draft', data: e.target.value })
     }
 
-    onBlur(e) {
-        this.setState({ status: 'draft', data: e.target.value })
+    function saveIntent(data) {
+
+        let newIntent =interactionContext.intent;
+        newIntent.phrase = data;
+        newIntent.saved = true;
+        newIntent.slot = itentState.slot;
+        newIntent.hasSlot = itentState.hasSlot;
+
+        setIntentState({ status: 'saved', data: data })
+        setInteractionContext(newIntent)
+        
+        props.onSave()
     }
 
-    saveIntent(data) {
-
-        var foundIndex = this.props.dialogs.findIndex(x => x.id == this.props.id);
-        this.props.dialogs[foundIndex].phrase = data;
-        this.props.dialogs[foundIndex].saved = true;
-        this.props.dialogs[foundIndex].slot = this.state.slot;
-        this.props.dialogs[foundIndex].hasSlot = this.state.hasSlot;
-        this.props.onSave()
+    function onSave() {
+        saveIntent(itentState.data)
     }
 
-    onSave() {
-        this.setState({ status: 'saved' })
-        this.saveIntent(this.state.data)
-    }
-
-    handleSaveVariableSwitch() {
-
-
-        this.setState({
-            hasSlot: !this.state.hasSlot
+    function handleSaveVariableSwitch() {
+        setIntentState({
+            hasSlot: !itentState.hasSlot
         })
     }
 
-    saveSlot = (slot) => {
-        this.setState({
-            slot: [...this.state.slot, slot]
+    function saveSlot(slot) {
+        setIntentState({
+            slot: [...itentState.slot, slot]
         })
     }
 
-    saveSlotCallback = (data) => {
-        this.saveSlot(data)
+    function saveSlotCallback(data) {
+        saveSlot(data)
     }
 
-    render(props) {
 
-        const { classes } = this.props;
+    if (itentState.status == 'draft') {
 
-        if (this.state.status == 'draft') {
+        return (
 
-            return (
+            <Grid container style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
+                <Grid item xs={10} sm={10}>
+                    <FormControl fullWidth size="small" >
+                        <TextField
+                            color='primary'
+                            key={props.id}
+                            onBlur={(e) => onBlur(e)}
+                        />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={1} sm={2}>
+                    <IconButton id='btnUserIntent' size="small" onClick={() => onSave(itentState.data)}>
+                        <SaveIcon fontSize="large" variant="contained" color="primary" />
+                    </IconButton  >
+                </Grid>
+                <Grid>
+                    Salvar Resposta em variável ?
+                    <Switch color="primary" checked={itentState.hasSlot} onChange={() => handleSaveVariableSwitch()} />
+                </Grid>
+                {
+                    itentState.hasSlot ?
+                        <Grid item xs={12} sm={12}>
+                            <Slot
+                                saveSlotCallback={(data) => saveSlotCallback(data)}
+                                slot={itentState.slot}
+                                id={props.id}>
+                            </Slot>
+                        </Grid> : null
+                }
 
-                <Grid container style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
-                    <Grid item xs={10} sm={10}>
-                        <FormControl fullWidth size="small" >
-                            <TextField
-                                color='primary'
-                                key={this.props.id}
-                                onBlur={(e) => this.onBlur(e)}
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={1} sm={2}>
-                        <IconButton id='btnUserIntent' size="small" onClick={() => this.onSave(this.state.data)}>
-                            <SaveIcon fontSize="large" variant="contained" color="primary" />
-                        </IconButton  >
-                    </Grid>
-                    <Grid>
-                        Salvar Resposta em variável ?
-                    <Switch color="primary" checked={this.state.hasSlot} onChange={() => this.handleSaveVariableSwitch()} />
-                    </Grid>
+            </Grid>
+        )
+
+    } else if (itentState.status == 'saved') {
+        return (
+            <Grid container>
+                <Grid item xs={12} sm={12}>
+                    <div style={{ display: "flex", alignItems: 'baseline', width: "100%" }}>
+                        <div style={{ padding: 10 }}>
+                            <AccountIcon color="primary" />
+                        </div>
+                        <Paper className={props.classes.card} elevation={3}>
+                            <p>{itentState.data}</p>
+                        </Paper>
+                    </div>
+                </Grid>
+                <Grid item xs={12} sm={12}>
                     {
-                        this.state.hasSlot ?
-                            <Grid item xs={12} sm={12}>
-                                <Slot
-                                    saveSlotCallback={(data) => this.saveSlotCallback(data)}
-                                    slot={this.state.slot}
-                                    id={this.props.id}>
-                                </Slot>
-                            </Grid> : null
+                        itentState.hasSlot ?
+                            <PillContainer style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
+                                <Typography variant="subtitle2" display="block" gutterBottom><p style={{ paddingRight: 10 }}>salva na variável: </p></Typography>
+                                {itentState.slot.map((o) => (
+                                    <Pill key={o.value}>
+                                        <div>{o.value} - {o.type}</div>
+
+
+                                        <IconButton size='small'>
+                                            <CloseIcon />
+                                        </IconButton>
+
+                                    </Pill>
+                                ))}
+                            </PillContainer> : null
                     }
 
                 </Grid>
-
-
-            )
-
-        } else if (this.state.status == 'saved') {
-            return (
-                <Grid container>
-                    <Grid item xs={12} sm={12}>
-                        <div style={{ display: "flex", alignItems: 'baseline', width: "100%" }}>
-                            <div style={{ padding: 10 }}>
-                                <AccountIcon color="primary" />
-                            </div>
-                            <Paper className={classes.card} elevation={3}>
-                                <p>{this.state.data}</p>
-                            </Paper>
-                        </div>
-                    </Grid>
-                    <Grid item xs={12} sm={12}>
-                        {
-                            this.state.hasSlot ?
-                                <PillContainer style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
-                                    <Typography variant="subtitle2" display="block" gutterBottom><p style={{ paddingRight: 10 }}>salva na variável: </p></Typography>
-                                    {this.state.slot.map((o) => (
-                                        <Pill key={o.value}>
-                                            <div>{o.value} - {o.type}</div>
-                                          
-
-                                            <IconButton size='small'>
-                                                <CloseIcon />
-                                            </IconButton>
-
-                                        </Pill>
-                                    ))}
-                                </PillContainer> : null
-                        }
-
-                    </Grid>
-                </Grid>
-
-            )
-        }
+            </Grid>
+        )
     }
+
 }
 
 export default withStyles(styles, { withTheme: true })(Intent);

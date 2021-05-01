@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Handle } from 'react-flow-renderer';
-import Builder from './dialog/builder';
+import InteractionBlock from './dialog/interactionBlock';
 import CallSplitIcon from '@material-ui/icons/CallSplit';
 import { IconButton } from '@material-ui/core';
+
 
 class StartNode extends Component {
 
@@ -11,10 +12,10 @@ class StartNode extends Component {
         super(props);
 
         this.state = {
-
+            
         }
     }
-
+    
     createDecisor() {
         this.props.createDecisorNodeCallback(this.props.nodeInfo);
     }
@@ -22,9 +23,9 @@ class StartNode extends Component {
     render(props) {
         return (
             <>
-                <Builder
-                    createDecisorNodeCallback={(data,nodeInfo) => this.props.createDecisorNodeCallback(data,nodeInfo)}>
-                </Builder>
+                <InteractionBlock>
+
+                </InteractionBlock>
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Handle

@@ -37,30 +37,25 @@ class Options extends Component {
                 <div className={classes.gridOptions}>
                     <div className={classes.gridOptions2}>
 
+                        {
+                            (this.props.dialogs.length == 0) ?
 
-                        <Button className={classes.buttonOption}
-                            variant='contained'
-                            color='primary'
-                            id='btnUserIntent'
-                            width='100%'
-                            onClick={() => { this.props.createIntentCallback() }}>
-                            Usuário
-                        </Button >
+                                <Button className={classes.buttonOption}
+                                    variant='contained'
+                                    color='primary'
+                                    id='btnUserIntent'
+                                    width='100%'
+                                    onClick={() => { this.props.createIntentCallback() }}>
+                                    Bloco Usuário
+                                </Button> :
 
-                        <SimpleMenu
-                            simpleResponse={this.props.createBotResponseCallback}>
-                        </SimpleMenu>
-
-
-
-                        <Button
-                            className={classes.buttonOption}
-                            variant="contained"
-                            color="primary"
-                            className={classes.buttonDecision}
-                            onClick={() => { this.props.createDecisorCallback() }}>
-                            decisao
-                        </Button>
+                                <>
+                                    <SimpleMenu
+                                        simpleResponse={this.props.createBotResponseCallback}
+                                        conditionalResponse ={this.props.createDecisorCallback}>
+                                    </SimpleMenu>                                
+                                </>
+                        }
 
                     </div>
                 </div>

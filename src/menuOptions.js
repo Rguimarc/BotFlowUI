@@ -24,7 +24,7 @@ export default function SimpleMenu(props) {
                 onClick={handleClick}
                 style= {{  marginRight: '15px'}}
                 id='btnBotResponse'>
-                Bot
+                Bloco Bot
             </Button>
 
             <Menu
@@ -34,8 +34,8 @@ export default function SimpleMenu(props) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <MenuItem onClick={() => { localProps.simpleResponse() }}>Frase</MenuItem>
-                <MenuItem onClick={handleClose}>Ação</MenuItem>
+                <MenuItem onClick={() => { localProps.simpleResponse() }}>Resposta Simples</MenuItem>
+                <MenuItem onClick={() => { localProps.conditionalResponse() }}>Resposta Condicional</MenuItem>
             </Menu>
         </div>
     );

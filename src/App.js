@@ -8,7 +8,7 @@ import ForumIcon from '@material-ui/icons/Forum';
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import Container from '@material-ui/core/Container';
-import Builder from './dialog/builder';
+ 
 import Flow from './dialog/flow';
 import DemoQueryBuilder from './decisor'
 const drawerWidth = 240;

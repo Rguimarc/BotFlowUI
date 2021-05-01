@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import '../index.css'
 import ReactFlow from 'react-flow-renderer';
-import Builder from './builder';
 import StartNode from '../startNode';
 import { withStyles } from '@material-ui/core/styles';
 
