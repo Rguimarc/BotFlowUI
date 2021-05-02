@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import { Button, IconButton } from '@material-ui/core';
+import React, { useState, useContext } from 'react';
+import { Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import SimpleMenu from '../menuOptions';
+import InteractionBlockContext from './interactionBlockContext';
 
 const styles = theme => ({
     buttonOption: {
@@ -24,36 +25,42 @@ const styles = theme => ({
     }
 });
 
-class Options extends Component {
 
-    render(props) {
+const Options = (props) => {
 
-        const { classes } = this.props;
 
-        if (this.props.mode == 'selection')
+    const { interactionContext, setInteractionContext } = useContext(InteractionBlockContext);
+
+    const [itentState, setOptionsState] = useState({
+      
+    });
+
+        console.log("No options ")
+        console.log(interactionContext)
+        if (interactionContext.mode == 'selection')
 
             return (
 
-                <div className={classes.gridOptions}>
-                    <div className={classes.gridOptions2}>
+                <div className={props.classes.gridOptions}>
+                    <div className={props.classes.gridOptions2}>
 
                         {
-                            (this.props.dialogs.length == 0) ?
+                            (!interactionContext.intent) ?
 
-                                <Button className={classes.buttonOption}
+                                <Button className={props.classes.buttonOption}
                                     variant='contained'
                                     color='primary'
                                     id='btnUserIntent'
                                     width='100%'
-                                    onClick={() => { this.props.createIntentCallback() }}>
+                                    onClick={() => {  props.createIntentCallback() }}>
                                     Bloco Usuário
                                 </Button> :
 
                                 <>
                                     <SimpleMenu
-                                        simpleResponse={this.props.createBotResponseCallback}
-                                        conditionalResponse ={this.props.createDecisorCallback}>
-                                    </SimpleMenu>                                
+                                        simpleResponse={ props.createBotResponseCallback}
+                                        conditionalResponse={ props.createDecisorCallback}>
+                                    </SimpleMenu>
                                 </>
                         }
 
@@ -63,7 +70,7 @@ class Options extends Component {
         else
             return null
 
-    }
+ 
 }
 
 export default withStyles(styles, { withTheme: true })(Options);

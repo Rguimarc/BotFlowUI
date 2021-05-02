@@ -30,10 +30,16 @@ class Slot extends Component {
 
         super(props)
 
-        this.state = {
-            value: this.props.slot.value,
-            type: this.props.slot.type
-        }
+        if (this.props.slot)
+            this.state = {
+                value: this.props.slot.value,
+                type: this.props.slot.type
+            }
+        else
+            this.state = {
+                value: '',
+                type: ''
+            }
     }
 
     handleTextFieldChange = (e) => {
@@ -55,10 +61,10 @@ class Slot extends Component {
 
         newSlot = {
             value: this.state.value,
-            type:  this.state.type,
-        }  
-    
- 
+            type: this.state.type,
+        }
+
+
         this.props.saveSlotCallback(newSlot);
 
     }
@@ -75,7 +81,7 @@ class Slot extends Component {
                 <Grid item xs={1} sm={1}>
 
                     <IconButton id='btnUserIntent' size="small"  >
-                        <AddIcon  onClick={() => this.handleAddClick()} fontSize="large" variant="contained" className={classes.buttonAdd} />
+                        <AddIcon onClick={() => this.handleAddClick()} fontSize="large" variant="contained" className={classes.buttonAdd} />
                     </IconButton  >
                 </Grid>
                 <Grid item xs={5} sm={6}>
