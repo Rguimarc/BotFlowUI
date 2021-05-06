@@ -16,7 +16,9 @@ const styles = theme => ({
         borderRadius: '10px',
         border: '2px solid #e33371',
         display: 'flex',
-        justify: 'flex-start'
+        justify: 'flex-start',
+        marginBottom:'10px',
+        marginTop: '10px'
     }
 });
 

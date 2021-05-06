@@ -15,11 +15,14 @@ const PillContainer = styled.div`
 `
 const Pill = styled.div`
   display: flex;
-  background-color: #b2acfa;
-  border-radius: 10px;
-  padding: 4px;
-  margin-right: 5px;
-  margin-top: 5px;
+  border-radius: 90px;
+  color: #4088f6;
+  border-style:solid;
+  border-width:2px;
+  border-color:#3f50b5;
+  padding: 2px 10px;
+  margin-right: 10px;
+  margin-top: 10px;
   align-items: center;
   overflow-wrap: anywhere;
 `
@@ -32,7 +35,8 @@ const styles = theme => ({
         borderRadius: '10px',
         border: '2px solid #3f50b5',
         display: 'flex',
-        justify: 'flex-start'
+        justify: 'flex-start',
+        marginBottom: '10px'
     }
 });
 
@@ -56,7 +60,7 @@ const Intent = (props) => {
             {
                 status: 'draft',
                 data: e.target.value,
-                slot: intentState.slot               
+                slot: intentState.slot
             })
     }
 
@@ -116,37 +120,46 @@ const Intent = (props) => {
 
         return (
 
-            <Grid container style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
-                <Grid item xs={10} sm={10}>
-                    <FormControl fullWidth size="small" >
+            <div style={{
+                marginLeft: '40px',
+                marginRight: '40px',
+                marginTop: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'left'
+            }}>
+                <div>
+                    <FormControl size="large" style={{ width: '80%' }}>
                         <TextField
+
                             color='primary'
                             key={interactionContext.intent.id}
                             onBlur={(e) => onBlur(e)}
                         />
                     </FormControl>
-                </Grid>
-                <Grid item xs={1} sm={2}>
+
+
                     <IconButton id='btnUserIntent' size="small" onClick={() => onSave(intentState.data)}>
                         <SaveIcon fontSize="large" variant="contained" color="primary" />
                     </IconButton  >
-                </Grid>
-                <Grid>
-                    Salvar Resposta em variável ?
+
+                </div>
+                <div>
+                    Salvar Resposta em variável?
                     <Switch color="primary" checked={intentState.hasSlot} onChange={() => handleSaveVariableSwitch()} />
-                </Grid>
+                </div>
                 {
                     intentState.hasSlot ?
-                        <Grid item xs={12} sm={12}>
+                        <div item xs={12} sm={12}>
                             <Slot
                                 saveSlotCallback={(data) => saveSlotCallback(data)}
                                 slot={intentState.slot}
                                 id={interactionContext.intent.id}>
                             </Slot>
-                        </Grid> : null
+                        </div> : null
                 }
 
-            </Grid>
+            </div>
         )
 
     } else if (interactionContext.intent.saved == true) {
@@ -166,7 +179,7 @@ const Intent = (props) => {
                     {
                         interactionContext.intent.hasSlot ?
                             <PillContainer style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
-                                <Typography variant="subtitle2" display="block" gutterBottom><p style={{ paddingRight: 10 }}>salva na variável: </p></Typography>
+                                <span style={{ marginRight: '10px' }}>Resposta salva na variável:</span>
                                 {interactionContext.intent.slot.map((o) => (
                                     <Pill key={o.value}>
                                         <div>{o.value} - {o.type}</div>

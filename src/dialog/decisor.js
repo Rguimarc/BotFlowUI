@@ -2,9 +2,6 @@
 import React, { Component } from 'react';
 import { Paper, TextField, FormControl, Grid, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import BuildIcon from '@material-ui/icons/Build';
 import AddIcon from '@material-ui/icons/Add'
@@ -19,7 +16,9 @@ const styles = theme => ({
 
         '&:hover': {
             backgroundColor: '#3BB143'
-        }
+        },
+        margin: '10px'
+
     },
     cardDecision: {
         transition: '0.3s',
@@ -31,10 +30,26 @@ const styles = theme => ({
         backgroundColor: '#FFFFFF',
         color: 'rgba( 241, 90, 36, 1 )',
     },
-    gridOptions2: {
+    gridRow: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'left',
+        marginLeft: '40px',
+        marginRight: '40px',
+        marginTop: '10px'
+    },
+    gridColumn: {
+        display: 'flex',
+        flexDirection: 'column',
+        marginTop:'20px',
+        marginBottom:'10px',
+        marginLeft: '40px',
+        marginRight: '40px',
+        padding: 4 
+    },
+    optionButton: {
+        margin: '10px',
+        marginLeft: '0px'
     }
 
 });
@@ -73,52 +88,49 @@ class Decisor extends Component {
 
         if (this.state.status == 'draft') {
             return (
-                <Grid container style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
+                <Paper elevation={0} padding={3} variant='outlined' className={classes.gridColumn}  >
 
-                    <div className={classes.gridOptions2}>
+                    <div className={classes.gridRow}>
 
-                        <Button
-                            variant="contained"
-                            onClick={() => this.saveDecision(this.state.decisions)}
-                            size="small"
-                            color='primary'
-
-                            startIcon={<SaveIcon />}
-                        >
-                            Condição
-                         </Button>
-
-
-                        <Button
-                            variant="contained"
-                            onClick={() => this.addDecision()}
-                            size="small"
-                            className={classes.buttonAdd}
-                            startIcon={<AddIcon />}
-                        >
-                            Condição
-                         </Button>
+                        <span>Configure as condicionais a serem utilizadas:</span>
 
                     </div >
 
+                    <div>
+                        <div >
 
+                            {
+                                this.state.decisions.length > 0 ?
 
-                    <Grid item xs={12} sm={12}>
-                        <List style={{
+                                    this.state.decisions.map((value) => {
 
-                            maxWidth: 360
+                                        return (
+                                            <div className={classes.gridRow}>
+                                                <FormControl size="small" >
+                                                    <TextField
+                                                        color='primary'
+                                                        key={this.props.id}
+                                                        label="Nome"
+                                                    />
+                                                </FormControl>
 
-                        }}>
+                                                <IconButton edge="end" aria-label="comments">
+                                                    <BuildIcon color="primary" />
+                                                </IconButton>
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={() => this.addDecision()}
+                                                    size="small"
+                                                    className={classes.buttonAdd}
+                                                    startIcon={<AddIcon />}>
+                                                    Condição
+                                                </Button>
+                                            </div>
 
-                            {this.state.decisions.map((value) => {
+                                        )
 
-                                const labelId = `checkbox-list-label-${value}`;
-
-                                return (
-
-                                    <ListItem key={value} role={undefined} dense button  >
-
-                                        <FormControl fullWidth size="small" >
+                                    }) : <div className={classes.gridRow}>
+                                        <FormControl size="small" >
                                             <TextField
                                                 color='primary'
                                                 key={this.props.id}
@@ -126,22 +138,37 @@ class Decisor extends Component {
                                             />
                                         </FormControl>
 
+                                        <IconButton edge="end" aria-label="comments">
+                                            <BuildIcon  />
+                                        </IconButton>
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => this.addDecision()}
+                                            size="small"
+                                            className={classes.buttonAdd}
+                                            startIcon={<AddIcon />}>
+                                            Condição
+                                        </Button>
+                                    </div>
+                            }
+                        </div>
 
-                                        <ListItemSecondaryAction>
-                                            <IconButton edge="end" aria-label="comments">
-                                                <BuildIcon color="primary" />
-                                            </IconButton>
+                    </div>
 
-                                        </ListItemSecondaryAction>
-                                    </ListItem>)
+                    <div className={classes.gridRow}>
+                        <Button
+                            className={classes.optionButton}
+                            variant="contained"
+                            onClick={() => this.saveDecision(this.state.decisions)}
+                            size="small"
+                            color='primary'
+                            startIcon={<SaveIcon />}>
+                            Salvar
+                         </Button>
+                    </div>
 
-                            })}
 
-                        </List>
-
-                    </Grid>
-
-                </Grid >
+                </ Paper >
 
             )
         }

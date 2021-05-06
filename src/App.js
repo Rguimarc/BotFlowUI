@@ -11,6 +11,7 @@ import Container from '@material-ui/core/Container';
  
 import Flow from './dialog/flow';
 import DemoQueryBuilder from './decisor'
+import InteractionBlock from './dialog/interactionBlock';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -89,7 +90,7 @@ function App() {
       </Drawer>
       <Container>
       <div style={{ padding: 200 }}>
-         <Flow></Flow>
+         <InteractionBlock></InteractionBlock>
       </div>
 
       </Container>

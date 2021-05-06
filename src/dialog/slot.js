@@ -77,7 +77,7 @@ class Slot extends Component {
 
 
             <Grid container style={{ marginTop: 10 }}>
-                <Grid item xs={12} sm={12} style={{ display: 'flex', justify: 'flexflex-start' }}><Typography variant="subtitle2" display="block" gutterBottom>Configure a váriavel a ser preenchida: </Typography></Grid>
+                <Grid item xs={12} sm={12} style={{ display: 'flex', justify: 'flexflex-start' }}> <span>Configure a váriavel a ser preenchida: </span></Grid>
                 <Grid item xs={1} sm={1}>
 
                     <IconButton id='btnUserIntent' size="small"  >
