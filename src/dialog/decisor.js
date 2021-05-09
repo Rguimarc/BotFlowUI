@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React, { useState, useContext } from 'react';
 import { Paper, TextField, FormControl, Grid, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -7,6 +7,7 @@ import BuildIcon from '@material-ui/icons/Build';
 import AddIcon from '@material-ui/icons/Add'
 import SaveIcon from '@material-ui/icons/Save';
 import HelpIcon from '@material-ui/icons/Help';
+import InteractionBlockContext from './interactionBlockContext';
 
 const styles = theme => ({
 
@@ -36,16 +37,16 @@ const styles = theme => ({
         justifyContent: 'left',
         marginLeft: '40px',
         marginRight: '40px',
-        marginTop: '10px'
+        marginTop: '10px',
+        width: '100%'
     },
     gridColumn: {
         display: 'flex',
         flexDirection: 'column',
-        marginTop:'20px',
-        marginBottom:'10px',
-        marginLeft: '40px',
-        marginRight: '40px',
-        padding: 4 
+        marginTop: '20px',
+        marginBottom: '10px',
+        padding: 4,
+        width: '100%'
     },
     optionButton: {
         margin: '10px',
@@ -54,147 +55,180 @@ const styles = theme => ({
 
 });
 
-class Decisor extends Component {
 
 
-    constructor(props) {
-        super(props);
 
-        this.state = {
-            decisions: [],
-            status: this.props.status
-        }
-    }
+const Decisor = (props) => {
 
-    addDecision = () => {
+    const { interactionContext, setInteractionContext } = useContext(InteractionBlockContext);
 
-        this.setState(
-            { decisions: [...this.state.decisions, this.state.decisions.length + 1] }
+    let conds;
+
+
+
+
+    conds = interactionContext.responses.find(obj => {
+        return (obj.conditionals)
+    })
+
+    const [decisorState, setDecisorState] = useState({
+        conditionals: conds.conditionals
+    });
+
+ 
+
+
+
+    function addDecision() {
+
+        let cpConditionals = [...decisorState.conditionals, {
+            id: 'conditionalResponse' + (decisorState.conditionals.length + 1),
+            condition: '',
+            phrase: '',
+            saved: false,
+            type: 'conditionalResponse'
+        }];
+
+        setDecisorState(
+            {
+                conditionals: cpConditionals
+            }
         )
     }
 
+    function saveDecision(data) {
 
-    saveDecision = (data) => {
+        console.log("save decisison")
+        console.log(data)
+        console.log(decisorState.conditionals)
+        decisorState.conditionals.forEach((x) => {
+            x.saved = true
+        })
 
-        var foundIndex = this.props.dialogs.findIndex(x => x.id == this.props.id);
-        this.props.dialogs[foundIndex].saved = true;
-        this.setState({ status: 'saved' })
-        this.props.saveDecisorCallback(data)
+        props.saveDecisorCallback(decisorState.conditionals)
     }
 
-    render(props) {
 
-        const { classes } = this.props;
+    let saved = true;
 
-        if (this.state.status == 'draft') {
-            return (
-                <Paper elevation={0} padding={3} variant='outlined' className={classes.gridColumn}  >
+    if (decisorState.conditionals) {
+        decisorState.conditionals.forEach((x) => {
+            if (x.saved == false) {
+                saved = false;
+            }
+        });
+    }
 
-                    <div className={classes.gridRow}>
 
-                        <span>Configure as condicionais a serem utilizadas:</span>
+    if (!saved) {
+        return (
+            <Paper elevation={0} padding={3} variant='outlined' className={props.classes.gridColumn}  >
 
-                    </div >
+                <div className={props.classes.gridRow}>
 
-                    <div>
-                        <div >
+                    <span>Configure as condicionais a serem utilizadas:</span>
 
-                            {
-                                this.state.decisions.length > 0 ?
+                </div >
 
-                                    this.state.decisions.map((value) => {
+                <div>
+                    <div >
 
-                                        return (
-                                            <div className={classes.gridRow}>
-                                                <FormControl size="small" >
-                                                    <TextField
-                                                        color='primary'
-                                                        key={this.props.id}
-                                                        label="Nome"
-                                                    />
-                                                </FormControl>
+                        {
+                            decisorState.conditionals.length > 0 ?
 
-                                                <IconButton edge="end" aria-label="comments">
-                                                    <BuildIcon color="primary" />
-                                                </IconButton>
-                                                <Button
-                                                    variant="contained"
-                                                    onClick={() => this.addDecision()}
-                                                    size="small"
-                                                    className={classes.buttonAdd}
-                                                    startIcon={<AddIcon />}>
-                                                    Condição
-                                                </Button>
-                                            </div>
+                                decisorState.conditionals.map((value) => {
 
-                                        )
+                                    return (
+                                        <div className={props.classes.gridRow}>
+                                            <FormControl size="small" >
+                                                <TextField
+                                                    color='primary'
+                                                    key={props.id}
+                                                    label="Nome"
+                                                />
+                                            </FormControl>
 
-                                    }) : <div className={classes.gridRow}>
-                                        <FormControl size="small" >
-                                            <TextField
-                                                color='primary'
-                                                key={this.props.id}
-                                                label="Nome"
-                                            />
-                                        </FormControl>
+                                            <IconButton edge="end" aria-label="comments">
+                                                <BuildIcon color="primary" />
+                                            </IconButton>
+                                            <Button
+                                                variant="contained"
+                                                onClick={() => addDecision()}
+                                                size="small"
+                                                className={props.classes.buttonAdd}
+                                                startIcon={<AddIcon />}>
+                                                Condição
+                                            </Button>
+                                        </div>
 
-                                        <IconButton edge="end" aria-label="comments">
-                                            <BuildIcon  />
-                                        </IconButton>
-                                        <Button
-                                            variant="contained"
-                                            onClick={() => this.addDecision()}
-                                            size="small"
-                                            className={classes.buttonAdd}
-                                            startIcon={<AddIcon />}>
-                                            Condição
+                                    )
+
+                                }) : <div className={props.classes.gridRow}>
+                                    <FormControl size="small" >
+                                        <TextField
+                                            color='primary'
+                                            key={props.id}
+                                            label="Nome"
+                                        />
+                                    </FormControl>
+
+                                    <IconButton edge="end" aria-label="comments">
+                                        <BuildIcon />
+                                    </IconButton>
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => addDecision()}
+                                        size="small"
+                                        className={props.classes.buttonAdd}
+                                        startIcon={<AddIcon />}>
+                                        Condição
                                         </Button>
-                                    </div>
-                            }
-                        </div>
-
-                    </div>
-
-                    <div className={classes.gridRow}>
-                        <Button
-                            className={classes.optionButton}
-                            variant="contained"
-                            onClick={() => this.saveDecision(this.state.decisions)}
-                            size="small"
-                            color='primary'
-                            startIcon={<SaveIcon />}>
-                            Salvar
-                         </Button>
-                    </div>
-
-
-                </ Paper >
-
-            )
-        }
-        else if (this.state.status == 'saved') {
-            return (
-                <Grid container >
-                    <Grid item xs={12} sm={12}>
-                        <div style={{ display: "flex", alignItems: 'baseline', width: "100%" }}>
-                            <div style={{ padding: 10 }}>
-                                <HelpIcon className={classes.iconDecision} />
-                            </div>
-                            <Paper className={classes.cardDecision}>
-                                <div style={{ padding: 10 }}>
-                                    <div>
-                                        {this.state.decisions.map((item) => {
-                                            return <p>Decisao - {item}</p>
-                                        })}
-                                    </div>
                                 </div>
-                            </Paper>
-                        </div>
-                    </Grid>
-                </Grid>
-            )
-        }
+                        }
+                    </div>
+
+                </div>
+
+                <div className={props.classes.gridRow}>
+                    <Button
+                        className={props.classes.optionButton}
+                        variant="contained"
+                        onClick={() => saveDecision(decisorState.conditionals)}
+                        size="small"
+                        color='primary'
+                        startIcon={<SaveIcon />}>
+                        Salvar
+                         </Button>
+                </div>
+
+
+            </ Paper >
+
+        )
     }
+    else {
+        return (
+            <Grid container >
+                <Grid item xs={12} sm={12}>
+                    <div style={{ display: "flex", alignItems: 'baseline', width: "100%" }}>
+                        <div style={{ padding: 10 }}>
+                            <HelpIcon className={props.classes.iconDecision} />
+                        </div>
+                        <Paper className={props.classes.cardDecision}>
+                            <div style={{ padding: 10 }}>
+                                <div>
+                                    {decisorState.conditionals.map((item) => {
+                                        return <p>Decisao - {item}</p>
+                                    })}
+                                </div>
+                            </div>
+                        </Paper>
+                    </div>
+                </Grid>
+            </Grid>
+        )
+    }
+
 
 }
 

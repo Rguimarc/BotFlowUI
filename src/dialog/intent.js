@@ -51,10 +51,7 @@ const Intent = (props) => {
         data: ''
     });
 
-    console.log("CONSTRUTOR")
-    console.log(interactionContext)
-    console.log(intentState)
-
+ 
     function onBlur(e) {
         setIntentState(
             {
@@ -65,12 +62,7 @@ const Intent = (props) => {
     }
 
     function saveIntent(data) {
-
-        console.log("NO SAVE INTENT")
-
-        console.log(data)
-        console.log(interactionContext.intent)
-
+ 
         let newIntent = { ...interactionContext.intent };
 
         newIntent.phrase = data;
@@ -88,8 +80,6 @@ const Intent = (props) => {
     }
 
     function handleSaveVariableSwitch() {
-        console.log("NO handle vriable")
-        console.log(intentState)
         setIntentState({
             hasSlot: !intentState.hasSlot,
             slot: intentState.slot,
@@ -100,9 +90,6 @@ const Intent = (props) => {
     }
 
     function saveSlot(slot) {
-
-        console.log("NO SAVE SLOT")
-        console.log(intentState.slot)
         setIntentState({
             slot: [...intentState.slot, slot],
             hasSlot: true,
@@ -113,9 +100,7 @@ const Intent = (props) => {
     function saveSlotCallback(data) {
         saveSlot(data)
     }
-
-    console.log("ENTROU")
-    console.log(interactionContext)
+ 
     if (interactionContext.intent.saved == false) {
 
         return (

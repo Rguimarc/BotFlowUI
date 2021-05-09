@@ -35,8 +35,7 @@ const Options = (props) => {
       
     });
 
-        console.log("No options ")
-        console.log(interactionContext)
+ 
         if (interactionContext.mode == 'selection')
 
             return (
@@ -45,7 +44,7 @@ const Options = (props) => {
                     <div className={props.classes.gridOptions2}>
 
                         {
-                            (!interactionContext.intent) ?
+                            (!interactionContext.intent && props.blockType == 'Interaction') ?
 
                                 <Button className={props.classes.buttonOption}
                                     variant='contained'

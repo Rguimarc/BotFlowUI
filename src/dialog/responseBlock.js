@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Box, Container, Grid, Paper } from '@material-ui/core';
+import { Box, Grid, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Options from './options';
-import Intent from './intent'
 import Response from './response';
 import Decisor from './decisor';
-import Slot from './slot';
 import InteractionBlockContext from './interactionBlockContext';
 
 const styles = theme => ({
@@ -33,23 +31,6 @@ const InteractionBlock = (props) => {
     });
 
 
-    function createIntent() {
-
-        setInteractionContext({
-            mode: 'create',
-            intent: {
-                id: 'dialogIntent' + (interactionContext.responses.length + 1),
-                phrase: '',
-                hasSlot: false,
-                saved: false,
-                slot: [],
-                type: 'intent'
-            },
-            responses: []
-        })
-
-    }
-
     function createBotResponse() {
 
 
@@ -68,16 +49,6 @@ const InteractionBlock = (props) => {
         })
     }
 
-    function saveIntent(intentData) {
-
-
-        setInteractionContext({
-            responses: [],
-            mode: 'selection',
-            intent: intentData
-        })
-
-    }
 
 
     function saveResponse(id, responseData) {
@@ -149,18 +120,12 @@ const InteractionBlock = (props) => {
 
     }
 
-    function saveIntentCallback(data) {
-        saveIntent(data)
-    }
-
+ 
     function saveResponseCallback(id, data) {
         saveResponse(id, data)
     }
 
-    function createIntentCallback() {
-        createIntent()
-    }
-
+   
     function createBotResponseCallback() {
         createBotResponse()
     }
@@ -173,25 +138,7 @@ const InteractionBlock = (props) => {
         saveDecisor(data)
     }
 
-    function saveSlot(slot) {
-
-        let newIntent = { ...interactionContext.intent };
-        newIntent.hasSlot = true;
-
-        if (!newIntent.slot)
-            newIntent.slot = [];
-
-        newIntent.slot.push(slot);
-        newIntent.hasSlot = true;
-
-        createDecisor(newIntent)
-    }
-
-    function saveSlotCallback(data) {
-        saveSlot(data)
-    }
-
-
+ 
  
     return (
 
@@ -201,19 +148,7 @@ const InteractionBlock = (props) => {
             <Paper elevation={3} style={{ padding: 4, minWidth: '400px' }}>
                 <Box className={props.classes.gridDialog}>
                     <Grid >
-
-                        {
-                            interactionContext.intent ?
-
-                                <div className={props.classes.gridText}>
-
-                                    <Intent
-                                        onSave={(data) => saveIntentCallback(data)}
-                                    ></Intent>
-
-                                </div> : null
-                        }
-
+ 
                         {interactionContext.responses.map((itemDialog) => {
 
                             if (itemDialog.type == 'response')
@@ -238,21 +173,11 @@ const InteractionBlock = (props) => {
                             }
                         })}
 
-                        {
-                            interactionContext.createSlot == true ?
-                                <div style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
-                                    <span>Informe antes alguma variável para adicionar a condicação</span>
-                                    <Slot
-                                        saveSlotCallback={(data) => saveSlotCallback(data)}
-                                        id={interactionContext.intent.id}>
-                                    </Slot> </div> : null
-                        }
-
+                  
                     </Grid>
 
                     <Options
-                        blockType = 'Interaction'
-                        createIntentCallback={createIntentCallback}
+                        blockType = 'Response'
                         createBotResponseCallback={createBotResponseCallback}
                         createDecisorCallback={createDecisorCallback}>
                     </Options>

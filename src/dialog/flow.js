@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import '../index.css'
 import ReactFlow from 'react-flow-renderer';
-import StartNode from '../startNode';
+import InteractionNode from '../nodes/interactionNode';
+import ResponseNode from '../nodes/responseNode';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
@@ -24,7 +25,7 @@ class Flow extends Component {
       elements: [
         {
           id: '1',
-          data: { label: <StartNode createDecisorNodeCallback={(data, nodeInfo) => this.createDecisorNodeCallback(data, this.nodeInfo)} /> },
+          data: { label: <InteractionNode createDecisorNodeCallback={(data, nodeInfo) => this.createDecisorNodeCallback(data, this.nodeInfo)} /> },
           position: { x: 200, y: 200 },
           type: 'start',
           style: {
@@ -48,7 +49,7 @@ class Flow extends Component {
 
       let newNode = {
         id: String(nodeId),
-        data: { label: <StartNode nodeInfo={this.nodeInfo} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
+        data: { label: <ResponseNode/> },
         type: 'start',
         position: { x: nodeInfo.x + x, y: nodeInfo.y + 200 },
         style: {
@@ -60,7 +61,7 @@ class Flow extends Component {
 
 
       nodes.push(newNode)
-      nodes.push({ id: 'e' + nodeInfo.id + '-' + nodeId, source: String(nodeInfo.id), target: String(nodeId), animated: true })
+      nodes.push({ id: 'e' + nodeInfo.id + '-' + nodeId, source: String(nodeInfo.id), target: String(nodeId), animated: true})
     });
 
 
@@ -76,7 +77,7 @@ class Flow extends Component {
 
 
   render() {
-    console.log(this.state.elements)
+ 
     const { classes } = this.props;
     return (
       <div className={classes.divFlow} style={{ height: 6000, width: 6000 }}>

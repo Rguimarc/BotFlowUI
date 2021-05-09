@@ -3,8 +3,7 @@ import React from 'react';
 const InteractionBlockContext = React.createContext({
     interaction: {
         mode: 'selection',
-        decisor: [],
-        dialogs: [],
+        responses: [],
         intent : {}
     },
     setInteractionContext: () => { }
