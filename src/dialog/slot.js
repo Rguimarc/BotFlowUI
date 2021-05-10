@@ -1,7 +1,8 @@
-import React, { Component } from "react"
+import React, { useState, useContext } from "react"
 import AddIcon from '@material-ui/icons/Add'
 import { withStyles } from '@material-ui/core/styles';
 import { Grid, IconButton, InputLabel, MenuItem, FormControl, Select, TextField, Typography } from '@material-ui/core';
+import InteractionBlockContext from './interactionBlockContext';
 
 const styles = theme => ({
 
@@ -17,103 +18,125 @@ const styles = theme => ({
         marginTop: '15px'
     },
     inputSlot: {
-
-        width: '80%',
-
+        marginRight: '20px'
+    },
+    gridColumn: {
+        display: 'flex',
+        flexDirection: 'column',
+        marginTop: '20px',
+        marginBottom: '10px',
+        padding: 4,
+        width: '100%'
+    },
+    gridRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: '10px',
+        width: '100%'
     }
 });
 
+const Slot = (props) => {
 
-class Slot extends Component {
+    const { interactionContext, setInteractionContext } = useContext(InteractionBlockContext);
 
-    constructor(props) {
+    const [slotState, setSlotState] = useState({
+        status: interactionContext.intent.slot.status,
+        type: interactionContext.intent.slot.type,
+    });
 
-        super(props)
 
-        if (this.props.slot)
-            this.state = {
-                value: this.props.slot.value,
-                type: this.props.slot.type
-            }
-        else
-            this.state = {
-                value: '',
-                type: ''
-            }
-    }
+    function handleTextFieldChange(e) {
 
-    handleTextFieldChange = (e) => {
-        this.setState({
+        setSlotState({
             value: e.target.value,
+            type: slotState.type
         });
+ 
+        let newSlot = {
+            value : e.target.value,
+            type: slotState.type
+        }
+        if (props.fromIntent)
+            props.saveSlotCallback(newSlot);
     }
 
-    handleSelectChange = (e) => {
+    function handleSelectChange(e) {
 
-        this.setState({
+        setSlotState({
+            value: slotState.value,
             type: e.target.value,
         });
+
+        let newSlot = {
+            value : slotState.value,
+            type: e.target.value
+        }
+
+        if (props.fromIntent)
+            props.saveSlotCallback(newSlot);
     }
 
-    handleAddClick = () => {
+    function handleAddClick() {
 
         let newSlot = undefined
 
         newSlot = {
-            value: this.state.value,
-            type: this.state.type,
+            value: slotState.value,
+            type: slotState.type,
         }
-
-
-        this.props.saveSlotCallback(newSlot);
+ 
+        props.saveSlotCallback(newSlot);
 
     }
 
-    render(props) {
-
-        const { classes } = this.props;
-
-        return (
+    return (
 
 
-            <Grid container style={{ marginTop: 10 }}>
-                <Grid item xs={12} sm={12} style={{ display: 'flex', justify: 'flexflex-start' }}> <span>Configure a váriavel a ser preenchida: </span></Grid>
-                <Grid item xs={1} sm={1}>
+        <div className={props.classes.gridColumn}>
 
-                    <IconButton id='btnUserIntent' size="small"  >
-                        <AddIcon onClick={() => this.handleAddClick()} fontSize="large" variant="contained" className={classes.buttonAdd} />
-                    </IconButton  >
-                </Grid>
-                <Grid item xs={5} sm={6}>
-                    <FormControl fullWidth size="small" className={classes.inputSlot}>
-                        <TextField
-                            onChange={(e) => { this.handleTextFieldChange(e) }}
-                            style={{ paddingTop: "20px" }}
-                            color='primary'
-                            key={this.props.id + 'slot'}
-                            value={this.state.value}
-                        />
-                    </FormControl>
-                </Grid>
+            <div >
+                <span>Configure a váriavel a ser preenchida: </span>
+            </div>
 
-                <Grid item xs={5} sm={5}>
-                    <FormControl className={classes.root}>
-                        <InputLabel id="demo-simple-select-label">Tipo</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={this.state.type}
-                            onChange={(e) => { this.handleSelectChange(e) }}>
-                            <MenuItem value={10}>Nome</MenuItem>
-                            <MenuItem value={20}>Email</MenuItem>
-                            <MenuItem value={30}>CPF</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid>
-            </Grid>
-        )
-    }
+            <div className={props.classes.gridRow}>
+
+                {
+                    props.fromIntent ? null :
+                        <IconButton id='btnAddSlot' size="small"  >
+                            <AddIcon onClick={() => handleAddClick()} fontSize="large" variant="contained" className={props.classes.buttonAdd} />
+                        </IconButton>
+                }
+
+                <FormControl size="small" className={props.classes.inputSlot}>
+                    <TextField
+                        onChange={(e) => { handleTextFieldChange(e) }}
+                        style={{ paddingTop: "20px" }}
+                        color='primary'
+                        key={props.id + 'slot'}
+                        value={slotState.value}
+                    />
+                </FormControl>
+
+                <FormControl className={props.classes.root}>
+                    <InputLabel id="demo-simple-select-label">Tipo</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={slotState.type}
+                        onBlur={(e) => { handleSelectChange(e) }}>
+                        <MenuItem value={10}>Nome</MenuItem>
+                        <MenuItem value={20}>Email</MenuItem>
+                        <MenuItem value={30}>CPF</MenuItem>
+                    </Select>
+                </FormControl>
+
+            </div>
+        </div>
+    )
 }
+
 
 
 export default withStyles(styles, { withTheme: true })(Slot);

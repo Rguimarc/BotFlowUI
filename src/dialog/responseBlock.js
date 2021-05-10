@@ -3,7 +3,7 @@ import { Box, Grid, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Options from './options';
 import Response from './response';
-import Decisor from './decisor';
+import Decisor from './decisor.js';
 import InteractionBlockContext from './interactionBlockContext';
 
 const styles = theme => ({

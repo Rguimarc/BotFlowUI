@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Options from './options';
 import Intent from './intent'
 import Response from './response';
-import Decisor from './decisor';
+import Decisor from './decisor.js';
 import Slot from './slot';
 import InteractionBlockContext from './interactionBlockContext';
 
@@ -42,7 +42,7 @@ const InteractionBlock = (props) => {
                 phrase: '',
                 hasSlot: false,
                 saved: false,
-                slot: [],
+                slot: {},
                 type: 'intent'
             },
             responses: []
@@ -108,6 +108,8 @@ const InteractionBlock = (props) => {
             }
         })
 
+        cpResponses.push({ conditionals: data });
+
         setInteractionContext({
             mode: 'selection',
             intent: interactionContext.intent,
@@ -119,9 +121,10 @@ const InteractionBlock = (props) => {
 
     }
 
-    function createDecisor() {
+    function createDecisor(newIntent) {
 
-        if (interactionContext.intent.slot.length == 0) {
+
+        if (!newIntent && interactionContext.intent.slot && !interactionContext.intent.slot.type) {
             setInteractionContext({
                 mode: 'create',
                 intent: interactionContext.intent,
@@ -129,17 +132,16 @@ const InteractionBlock = (props) => {
                 createSlot: true
             })
         } else {
-
             setInteractionContext({
                 mode: 'create',
-                intent: interactionContext.intent,
+                intent: newIntent ? newIntent : interactionContext.intent,
                 responses: [...interactionContext.responses, {
                     conditionals: [
                         {
                             id: 'conditionalResponse' + (interactionContext.responses.length + 1),
                             condition: '',
                             saved: false,
-                            phrase: '',
+                            name: '',
                             type: 'conditionalResponse'
                         }],
                 }],
@@ -175,16 +177,17 @@ const InteractionBlock = (props) => {
 
     function saveSlot(slot) {
 
+
         let newIntent = { ...interactionContext.intent };
         newIntent.hasSlot = true;
 
         if (!newIntent.slot)
-            newIntent.slot = [];
+            newIntent.slot = {};
 
-        newIntent.slot.push(slot);
+        newIntent.slot = slot;
         newIntent.hasSlot = true;
 
-        createDecisor(newIntent)
+        createDecisor(newIntent);
     }
 
     function saveSlotCallback(data) {
@@ -192,7 +195,6 @@ const InteractionBlock = (props) => {
     }
 
 
- 
     return (
 
 
@@ -251,7 +253,7 @@ const InteractionBlock = (props) => {
                     </Grid>
 
                     <Options
-                        blockType = 'Interaction'
+                        blockType='Interaction'
                         createIntentCallback={createIntentCallback}
                         createBotResponseCallback={createBotResponseCallback}
                         createDecisorCallback={createDecisorCallback}>

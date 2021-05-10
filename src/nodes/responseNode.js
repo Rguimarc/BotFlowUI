@@ -6,7 +6,6 @@ import { IconButton } from '@material-ui/core';
 
 const ResponseNode = (props) => {
 
-    console.log("asdfsaqdsadadasdasdasdsads")
     return (
         <>
             <ResponseBlock>

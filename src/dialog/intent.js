@@ -22,7 +22,6 @@ const Pill = styled.div`
   border-color:#3f50b5;
   padding: 2px 10px;
   margin-right: 10px;
-  margin-top: 10px;
   align-items: center;
   overflow-wrap: anywhere;
 `
@@ -51,26 +50,32 @@ const Intent = (props) => {
         data: ''
     });
 
- 
+
     function onBlur(e) {
         setIntentState(
             {
-                status: 'draft',
                 data: e.target.value,
+                hasSlot: intentState.hasSlot,
                 slot: intentState.slot
             })
     }
 
     function saveIntent(data) {
- 
+
         let newIntent = { ...interactionContext.intent };
 
         newIntent.phrase = data;
         newIntent.saved = true;
-        newIntent.slot = intentState.slot ? intentState.slot : [];
+        newIntent.slot = intentState.slot ? intentState.slot : {};
         newIntent.hasSlot = intentState.hasSlot;
 
-        setIntentState({ status: 'saved', data: data })
+        setIntentState(
+            {
+                status: 'saved',
+                hasSlot: intentState.hasSlot,
+                slot: intentState.slot,
+                data: data
+            })
 
         props.onSave(newIntent)
     }
@@ -80,18 +85,24 @@ const Intent = (props) => {
     }
 
     function handleSaveVariableSwitch() {
+
+        let slot = intentState.slot;
+
+        if (intentState.hasSlot == true) {
+            slot = [];
+        }
+
         setIntentState({
             hasSlot: !intentState.hasSlot,
-            slot: intentState.slot,
+            slot: slot,
             data: intentState.data
         })
-
-        console.log(intentState)
     }
 
     function saveSlot(slot) {
+
         setIntentState({
-            slot: [...intentState.slot, slot],
+            slot: slot,
             hasSlot: true,
             data: intentState.data
         })
@@ -100,7 +111,7 @@ const Intent = (props) => {
     function saveSlotCallback(data) {
         saveSlot(data)
     }
- 
+
     if (interactionContext.intent.saved == false) {
 
         return (
@@ -139,6 +150,7 @@ const Intent = (props) => {
                             <Slot
                                 saveSlotCallback={(data) => saveSlotCallback(data)}
                                 slot={intentState.slot}
+                                fromIntent={true}
                                 id={interactionContext.intent.id}>
                             </Slot>
                         </div> : null
@@ -163,19 +175,19 @@ const Intent = (props) => {
                 <Grid item xs={12} sm={12}>
                     {
                         interactionContext.intent.hasSlot ?
-                            <PillContainer style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
+                            <PillContainer style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px', marginBottom: '10px' }}>
                                 <span style={{ marginRight: '10px' }}>Resposta salva na variável:</span>
-                                {interactionContext.intent.slot.map((o) => (
-                                    <Pill key={o.value}>
-                                        <div>{o.value} - {o.type}</div>
 
+                                {interactionContext.intent.slot ?
+                                    <Pill key={interactionContext.intent.slot.value}>
+                                        <div>{interactionContext.intent.slot.value} - {interactionContext.intent.slot.type}</div>
 
                                         <IconButton size='small'>
                                             <CloseIcon />
                                         </IconButton>
 
-                                    </Pill>
-                                ))}
+                                    </Pill> : null
+                                }
                             </PillContainer> : null
                     }
 

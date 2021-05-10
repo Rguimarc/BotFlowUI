@@ -99,8 +99,6 @@ const Response = (props) => {
 
 
     function onSaveRichText(data) {
-        console.log("NO SAVERICHTEXT")
-        console.log(interactionContext)
         setResponseState(
             {
                 status: 'saved',
@@ -112,13 +110,11 @@ const Response = (props) => {
        
         updateResponse.phrase = data;
         updateResponse.saved = true;
-        console.log(interactionContext)
+
         props.onSave(props.id,updateResponse);
     }
 
-console.log("RESPONSEEEEEEEEEEEEE")
-console.log(interactionContext)
-console.log(props)
+
     const template = { __html: itentState.data }
 
     if (props.saved == false) {

@@ -8,6 +8,7 @@ import AddIcon from '@material-ui/icons/Add'
 import SaveIcon from '@material-ui/icons/Save';
 import HelpIcon from '@material-ui/icons/Help';
 import InteractionBlockContext from './interactionBlockContext';
+import Conditional from './conditional';
 
 const styles = theme => ({
 
@@ -25,6 +26,8 @@ const styles = theme => ({
         transition: '0.3s',
         padding: '2px 16px',
         borderRadius: '10px',
+        marginBottom: '10px',
+        marginTop: '10px',
         border: '2px solid rgba( 241, 90, 36, 1 )',
     },
     iconDecision: {
@@ -64,9 +67,6 @@ const Decisor = (props) => {
 
     let conds;
 
-
-
-
     conds = interactionContext.responses.find(obj => {
         return (obj.conditionals)
     })
@@ -75,16 +75,12 @@ const Decisor = (props) => {
         conditionals: conds.conditionals
     });
 
- 
-
-
-
     function addDecision() {
 
         let cpConditionals = [...decisorState.conditionals, {
             id: 'conditionalResponse' + (decisorState.conditionals.length + 1),
             condition: '',
-            phrase: '',
+            name: decisorState.currentName,
             saved: false,
             type: 'conditionalResponse'
         }];
@@ -96,16 +92,35 @@ const Decisor = (props) => {
         )
     }
 
+    function updateDecision(id, value) {
+
+        let cpDec  = [...decisorState.conditionals]; 
+        let index = decisorState.conditionals.findIndex(x => x.id == id)
+ 
+        cpDec[index].name = value;
+
+        setDecisorState(
+            {
+                conditionals: cpDec 
+            }
+        )
+    }
+
     function saveDecision(data) {
 
-        console.log("save decisison")
-        console.log(data)
-        console.log(decisorState.conditionals)
         decisorState.conditionals.forEach((x) => {
             x.saved = true
         })
-
+ 
         props.saveDecisorCallback(decisorState.conditionals)
+    }
+
+    function updateDecisionCallback(id, value) {
+        updateDecision(id, value);
+    }
+
+    function addDecisionCallback() {
+        addDecision();
     }
 
 
@@ -119,8 +134,8 @@ const Decisor = (props) => {
         });
     }
 
-
     if (!saved) {
+
         return (
             <Paper elevation={0} padding={3} variant='outlined' className={props.classes.gridColumn}  >
 
@@ -133,58 +148,16 @@ const Decisor = (props) => {
                 <div>
                     <div >
 
-                        {
-                            decisorState.conditionals.length > 0 ?
+                        {decisorState.conditionals.map((item) => {
 
-                                decisorState.conditionals.map((value) => {
-
-                                    return (
-                                        <div className={props.classes.gridRow}>
-                                            <FormControl size="small" >
-                                                <TextField
-                                                    color='primary'
-                                                    key={props.id}
-                                                    label="Nome"
-                                                />
-                                            </FormControl>
-
-                                            <IconButton edge="end" aria-label="comments">
-                                                <BuildIcon color="primary" />
-                                            </IconButton>
-                                            <Button
-                                                variant="contained"
-                                                onClick={() => addDecision()}
-                                                size="small"
-                                                className={props.classes.buttonAdd}
-                                                startIcon={<AddIcon />}>
-                                                Condição
-                                            </Button>
-                                        </div>
-
-                                    )
-
-                                }) : <div className={props.classes.gridRow}>
-                                    <FormControl size="small" >
-                                        <TextField
-                                            color='primary'
-                                            key={props.id}
-                                            label="Nome"
-                                        />
-                                    </FormControl>
-
-                                    <IconButton edge="end" aria-label="comments">
-                                        <BuildIcon />
-                                    </IconButton>
-                                    <Button
-                                        variant="contained"
-                                        onClick={() => addDecision()}
-                                        size="small"
-                                        className={props.classes.buttonAdd}
-                                        startIcon={<AddIcon />}>
-                                        Condição
-                                        </Button>
-                                </div>
-                        }
+                            return (
+                                <Conditional
+                                    conditional={item}
+                                    updateDecisionCallback={(id, value) => updateDecisionCallback(id, value)}
+                                    addDecisionCallback={() => addDecision()}>
+                                </Conditional>
+                            )
+                        })}
                     </div>
 
                 </div>
@@ -218,7 +191,7 @@ const Decisor = (props) => {
                             <div style={{ padding: 10 }}>
                                 <div>
                                     {decisorState.conditionals.map((item) => {
-                                        return <p>Decisao - {item}</p>
+                                        return <p>Decisao - {item.name}</p>
                                     })}
                                 </div>
                             </div>
