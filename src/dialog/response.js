@@ -1,12 +1,11 @@
 import MUIRichTextEditor from 'mui-rte'
 import { convertFromRaw } from 'draft-js'
 import { stateToHTML } from "draft-js-export-html";
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { createMuiTheme, Theme, MuiThemeProvider } from '@material-ui/core/styles'
 import RedditIcon from '@material-ui/icons/Reddit';
 import { Paper, Grid } from '@material-ui/core';
-import InteractionBlockContext from './interactionBlockContext';
 
 const styles = theme => ({
     card: {
@@ -17,16 +16,13 @@ const styles = theme => ({
         border: '2px solid #e33371',
         display: 'flex',
         justify: 'flex-start',
-        marginBottom:'10px',
+        marginBottom: '10px',
         marginTop: '10px'
     }
 });
 
 
 const Response = (props) => {
-
-
-    const { interactionContext, setInteractionContext } = useContext(InteractionBlockContext);
 
     const defaultTheme = createMuiTheme({
         palette: {
@@ -93,32 +89,28 @@ const Response = (props) => {
                 content: "😅",
             }
         ],
-        status:  props.status
+        status: props.status
 
     });
 
 
     function onSaveRichText(data) {
-        console.log("NO SAVERICHTEXT")
-        console.log(interactionContext)
         setResponseState(
             {
                 status: 'saved',
                 data: stateToHTML(convertFromRaw(JSON.parse(data)))
             })
 
-        var foundIndex = interactionContext.responses.findIndex(x => x.id == props.id);
-        var updateResponse = { ...interactionContext.responses[foundIndex] };
-       
+        console.log("NO PROPS RESPOSNSE,", props.responses)
+        var foundIndex = props.responses.findIndex(x => x.id == props.id);
+        var updateResponse = { ...props.responses[foundIndex] };
+
         updateResponse.phrase = data;
         updateResponse.saved = true;
-        console.log(interactionContext)
-        props.onSave(props.id,updateResponse);
+        console.log(props)
+        props.onSave(props.id, updateResponse);
     }
 
-console.log("RESPONSEEEEEEEEEEEEE")
-console.log(interactionContext)
-console.log(props)
     const template = { __html: itentState.data }
 
     if (props.saved == false) {

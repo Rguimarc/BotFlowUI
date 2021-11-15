@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { StrictMode, useState } from 'react';
 import { Box, Container, Grid, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import Options from './options';
+import Options from './options/options';
 import Intent from './intent'
 import Response from './response';
-import Decisor from './decisor';
+import IntentsMultiple from './intentsMultiple';
 import Slot from './slot';
-import InteractionBlockContext from './interactionBlockContext';
+import { INTERACTION_TYPE, MODE } from './enums/interactionBlockEnums';
+
+
 
 const styles = theme => ({
     gridDialog: {
@@ -17,162 +19,151 @@ const styles = theme => ({
 
     },
     gridText: {
-        marginTop:10,
-        marginBottom:10
+        marginTop: 10,
+        marginBottom: 10
     }
 
 });
 
 const InteractionBlock = (props) => {
 
-    const [interactionContext, setInteractionContext] = useState({
-        mode: 'selection',
-        decisor: [],
-        intent: undefined,
-        responses: []
-    });
+    // const [interactionBlockState, setinteractionBlockState] = useState({
+    //         mode: MODE,
+    //         decisor: [],
+    //         intent: undefined,
+    //         currentIntent: { type: undefined },
+    //         responses: []
+    //     });
 
+    const [mode, setMode] = useState(1);
+    const [currentIntent, setCurrentIntent] = useState(undefined);
+    const [responses, setResponses] = useState([]);
+    const [intent, setIntent] = useState(undefined);
+    const [createSlot, setCreateSlot] = useState(false);
+    const [parentNode] = useState(props.parentNode);
 
-    function createIntent() {
-
-        setInteractionContext({
-            mode: 'create',
-            intent: {
-                id: 'dialogIntent' + (interactionContext.responses.length + 1),
-                phrase: '',
-                hasSlot: false,
-                saved: false,
-                slot: [],
-                type: 'intent'
-            },
-            responses: []
-        })
-
-
-        console.log("criou INTENCAO")
-        console.log(interactionContext)
+    const createIntent = () => {
+        setIntent({
+            id: 'dialogIntent' + (responses.length + 1),
+            phrase: '',
+            hasSlot: false,
+            saved: false,
+            slot: [],
+            type: INTERACTION_TYPE.INTENT
+        });
+        setMode(MODE.CREATION)
     }
 
-    function createBotResponse() {
-
-
-        console.log("no create bot response");
-        console.log(interactionContext.Intent)
-        setInteractionContext({
-            mode: 'create',
-            responses: [
-                ...interactionContext.responses,
-                {
-                    id: 'dialogBot' + (interactionContext.responses.length + 1),
-                    phrase: '',
-                    saved: false,
-                    type: 'bot'
-                }
-            ],
-            intent: interactionContext.intent
-        })
+    const createBotResponse = () => {
+        setMode(MODE.CREATION)
+        setResponses([...responses, {
+            id: 'dialogBot' + (responses.length + 1),
+            phrase: '',
+            saved: false,
+            type: INTERACTION_TYPE.BOT
+        }])
     }
 
-    function saveIntent(intentData) {
-
-        console.log("save INTENTTTT")
-        console.log(intentData)
-        setInteractionContext({
-            responses: [],
-            mode: 'selection',
-            intent: intentData
-        })
-        console.log(interactionContext)
+    const saveIntent = (intentData) => {
+        setMode(MODE.DISPLAY)
+        setIntent(intentData);
     }
 
 
-    function saveResponse(id, responseData) {
-
-        console.log('ENTROU NO saveresponse')
-        console.log(id)
-        console.log(responseData)
-        console.log(interactionContext)
-        let responsesUpdated = [...interactionContext.responses].filter(x => x.id != id);
-
-        console.log(responsesUpdated)
-
-        console.log(interactionContext.intent)
-        responsesUpdated = [...responsesUpdated, responseData];
-        console.log(responsesUpdated)
-        if (responseData) {
-            setInteractionContext({
-                responses: [],
-                mode: 'selection',
-                responses: responsesUpdated,
-                intent: interactionContext.intent
-            })
-        }
+    const saveResponse=  (id, responseData) =>  {  
+        const responsesUpdated = [...responses].filter(x => x.id != id);
+        setResponses([...responsesUpdated, responseData]);
+        setMode(MODE.DISPLAY);   
     }
 
 
-    function saveDecisor(data) {
 
+    const saveDecisor = (data) => {
+        setMode(MODE.CREATION);
         props.createDecisorNodeCallback(data);
-
-        setInteractionContext({
-            mode: 'create',
-            decisor: [...interactionContext.decisor, data]
-        })
+        // setInteractionBlockContext({
+        //     mode: MODE.CREATION,
+        //     decisor: [...decisor, data]
+        // })
     }
 
-    function createDecisor() {
+    const saveMultipleIntents = (data) => {
+        props.createDecisorNodeCallback(data);
+        setMode(INTERACTION_TYPE.DISPLAY);
+        setCurrentIntent({
+            id: 'dialogIntent' + (responses.length + 1),
+            phrase: '',
+            hasSlot: false,
+            saved: true,
+            slot: [],
+            type: INTERACTION_TYPE.MULTIPLECHOICE
+        });
+    }
 
-
-        console.log("!sadfouihdofas")
-        if (interactionContext.intent.slot.length == 0) {
-            setInteractionContext({
-                mode: 'create',
-                intent: interactionContext.intent,
-                responses: interactionContext.responses,
-                createSlot: true
-            })
+    const createDecisor = () => {
+        if (intent.slot.length == 0) {
+            // setInteractionBlockContext({
+            //     mode: MODE.CREATION,
+            //     createSlot: true
+            // })
         } else {
 
-            setInteractionContext({
-                mode: 'create',
-                intent: interactionContext.intent,
-                responses: [...interactionContext.responses, { id: 'decisorBot' + (interactionContext.responses.length + 1), phrase: '', conditions: [], saved: false, type: 'decisor' }]
-            })
+            // setInteractionBlockContext({
+            //     mode: MODE.CREATION,
+            //     responses: [...responses, { id: 'decisorBot' + (responses.length + 1), phrase: '', conditions: [], saved: false, type: 'decisor' }]
+            // })
         }
-
     }
 
-    function saveIntentCallback(data) {
+
+    const createMultipleIntents = () => {
+        setMode(MODE.CREATION);
+        setCurrentIntent({
+            id: 'dialogIntent' + (responses.length + 1),
+            phrase: '',
+            hasSlot: false,
+            saved: false,
+            slot: [],
+            type: INTERACTION_TYPE.CREATION
+        });
+    }
+
+
+    const saveIntentCallback = (data) => {
         saveIntent(data)
     }
 
-    function saveResponseCallback(id, data) {
+    const saveResponseCallback = (id, data) => {
         saveResponse(id, data)
     }
 
-    function createIntentCallback() {
+    const createIntentCallback = () => {
         createIntent()
     }
 
-    function createBotResponseCallback() {
+    const createBotResponseCallback = () => {
         createBotResponse()
     }
 
-    function createDecisorCallback() {
+    const createDecisorCallback = () => {
         createDecisor()
     }
 
-    function saveDecisorCallback(data) {
+    const createMultipleIntentsCallback = () => {
+        createMultipleIntents()
+    }
+
+    const saveMultipleIntentsCallback = (data) => {
+        saveMultipleIntents(data)
+    }
+
+    const saveDecisorCallback = (data) => {
         saveDecisor(data)
     }
 
-    function saveSlot(slot) {
+    const saveSlot = (slot) => {
 
-
-        console.log("caiu no save slot do paiiuii")
-        console.log(interactionContext)
-        console.log(slot)
-        let newIntent = { ...interactionContext.intent };
+        let newIntent = { ...intent };
         newIntent.hasSlot = true;
 
         if (!newIntent.slot)
@@ -180,97 +171,108 @@ const InteractionBlock = (props) => {
 
         newIntent.slot.push(slot);
         newIntent.hasSlot = true;
-        console.log(newIntent)
-        setInteractionContext({
-            mode: 'create',
-            intent: newIntent,
-            responses: [...interactionContext.responses, { id: 'decisorBot' + (interactionContext.responses.length + 1), phrase: '', conditions: [], saved: false, type: 'decisor' }],
-            createSlot: false
-        })
 
-
-
-
+        setMode(MODE.CREATION);
+        setIntent(newIntent);
+        setResponses([...responses, { id: 'decisorBot' + (responses.length + 1), phrase: '', conditions: [], saved: false, type: 'decisor' }])
+        setCreateSlot(false);
 
     }
 
-    function saveSlotCallback(data) {
+    const saveSlotCallback = (data) => {
         saveSlot(data)
     }
 
+    console.log("RENDEREZIOU PAPAI");
+    console.log('mode', mode);
+    console.log('intent', intent);
+    console.log('currentIntent', currentIntent);
+    console.log('responses', responses);
+    console.log('parentNode', parentNode);
 
-    console.log("RENDEREZIOU PAPAI")
-
-    console.log(interactionContext)
     return (
 
-        <InteractionBlockContext.Provider value={{ interactionContext, setInteractionContext }}>
+        <Paper elevation={3} style={{ padding: 4, minWidth: '400px' }}>
+            <Box className={props.classes.gridDialog}>
+                <Grid >
 
-            <Paper elevation={3} style={{ padding: 4, minWidth: '400px' }}>
-                <Box className={props.classes.gridDialog}>
-                    <Grid >
+                    {
+                        intent ?
 
-                        {
-                            interactionContext.intent ?
+                            <div className={props.classes.gridText}>
+                                <Intent
+                                    intent={intent}
+                                    onSave={(data) => saveIntentCallback(data)}
+                                ></Intent>
+                            </div> : null
+                    }
+
+                    {responses.map((itemDialog) => {
+
+                        if (itemDialog.type == INTERACTION_TYPE.BOT)
+                            return (
 
                                 <div className={props.classes.gridText}>
+                                    <Response
+                                        saved={itemDialog.saved}
+                                        responses={responses}
+                                        onSave={(id, data) => saveResponseCallback(id, data)}
+                                        id={itemDialog.id}>
+                                    </Response>
+                                </div>)
 
-                                    <Intent
-                                        onSave={(data) => saveIntentCallback(data)}
-                                    ></Intent>
 
-                                </div> : null
+                        else if (itemDialog.type == 'decisor') {
+                            return (
+                                <div className={props.classes.gridText}>
+                                    <IntentsMultiple id={itemDialog.id}
+                                        status={itemDialog.saved == false ? 'draft' : 'saved'}
+                                        responses={responses}
+                                        saveDecisorCallback={(data) => saveDecisorCallback(data)}>
+                                    </IntentsMultiple>
+                                </div>)
                         }
-
-                        {interactionContext.responses.map((itemDialog) => {
-
-                            if (itemDialog.type == 'bot')
-                                return (
-
-                                    <div className={props.classes.gridText}>
-                                        <Response
-                                            saved={itemDialog.saved}
-                                            onSave={(id, data) => saveResponseCallback(id, data)}
-                                            id={itemDialog.id}>
-                                        </Response>
-                                    </div>)
+                    })}
 
 
-                            else if (itemDialog.type == 'decisor') {
-                                return (
-                                    <div className={props.classes.gridText}>
-                                        <Decisor id={itemDialog.id}
-                                            status={itemDialog.saved == false ? 'draft' : 'saved'}
-                                            responses={interactionContext.responses}
-                                            saveDecisorCallback={(data) => saveDecisorCallback(data)}>
-                                        </Decisor>
-                                    </div>)
-                            }
-                        })}
+                    {
+                        currentIntent && currentIntent.type == INTERACTION_TYPE.DISPLAY ?
 
-                        {
-                            interactionContext.createSlot == true ?
-                                <div style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
-                                    <span>Informe antes alguma variável para adicionar a condicação</span>
-                                        <Slot
-                                        saveSlotCallback={(data) => saveSlotCallback(data)}
-                                        id={interactionContext.intent.id}>
-                                    </Slot> </div> : null
-                        }
-
-                    </Grid>
-
-                    <Options
-                        createIntentCallback={createIntentCallback}
-                        createBotResponseCallback={createBotResponseCallback}
-                        createDecisorCallback={createDecisorCallback}>
-                    </Options>
+                            <div className={props.classes.gridText}>
+                                <IntentsMultiple id={currentIntent.id}
+                                    status={currentIntent.saved == true ? 'saved' : 'draft'}
+                                    saveMultipleIntentsCallback={(data) => saveMultipleIntentsCallback(data)}>
+                                </IntentsMultiple>
+                            </div>
+                            : null
+                    }
 
 
-                </Box>
-            </Paper>
+                    {
+                        createSlot == true ?
+                            <div style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
+                                <span>Informe antes alguma variável para adicionar a condicação</span>
+                                <Slot
+                                    saveSlotCallback={(data) => saveSlotCallback(data)}
+                                    id={intent.id}>
+                                </Slot> </div> : null
+                    }
 
-        </InteractionBlockContext.Provider>
+                </Grid>
+
+                <Options
+                    mode={mode}
+                    responses={responses}
+                    isStartBlock={parentNode}
+                    createIntentCallback={createIntentCallback}
+                    createBotResponseCallback={createBotResponseCallback}
+                    createIntentsMultipleCallback={createMultipleIntentsCallback}>
+                </Options>
+
+
+            </Box>
+        </Paper>
+
     )
 }
 

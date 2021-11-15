@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import '../index.css'
 import ReactFlow from 'react-flow-renderer';
-import StartNode from '../startNode';
+import InteractionNode from '../interactionNode';
 import { withStyles } from '@material-ui/core/styles';
+import { NODE_TYPE } from '../dialog/enums/interactionNodeEnum';
 
 const styles = theme => ({
   divFlow: {
@@ -16,15 +17,23 @@ const styles = theme => ({
 
 class Flow extends Component {
 
-
   constructor(props) {
     super(props);
-    this.nodeInfo = { x: 250, y: 250, id: 1 }
+    const nodeInfo = {
+      cords: { x: 250, y: 250, id: 1 },
+      type: NODE_TYPE.START
+    }
+
     this.state = {
       elements: [
         {
           id: '1',
-          data: { label: <StartNode createDecisorNodeCallback={(data, nodeInfo) => this.createDecisorNodeCallback(data, this.nodeInfo)} /> },
+          data: {
+            label: <InteractionNode
+              createDecisorNodeCallback={(data, nodeInfo) => this.createDecisorNodeCallback(data, this.nodeInfo)}
+              parentNode={nodeInfo}
+            />
+          },
           position: { x: 200, y: 200 },
           type: 'start',
           style: {
@@ -42,13 +51,17 @@ class Flow extends Component {
     let x = -200;
     let nodeId = nodeInfo.id;
 
+
     data.forEach((item) => {
 
       nodeId++;
 
       let newNode = {
         id: String(nodeId),
-        data: { label: <StartNode nodeInfo={this.nodeInfo} createDecisorNodeCallback={this.createDecisorNodeCallback} /> },
+        data: {
+          label: <InteractionNode parentNode={{ cords: { nodeInfo }, type: NODE_TYPE.INTERMEDIARY }}
+            createDecisorNodeCallback={this.createDecisorNodeCallback} />
+        },
         type: 'start',
         position: { x: nodeInfo.x + x, y: nodeInfo.y + 200 },
         style: {

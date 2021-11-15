@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { FormControl, IconButton, Grid, TextField, Paper, Typography, Switch } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Slot from './slot'
@@ -6,7 +6,6 @@ import styled from '@emotion/styled'
 import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 import AccountIcon from '@material-ui/icons/AccountCircle';
-import InteractionBlockContext from './interactionBlockContext';
 
 const PillContainer = styled.div`
   display: flex;
@@ -42,18 +41,13 @@ const styles = theme => ({
 
 const Intent = (props) => {
 
-    const { interactionContext, setInteractionContext } = useContext(InteractionBlockContext);
-
     const [intentState, setIntentState] = useState({
-        status: interactionContext.intent.status,
-        hasSlot: interactionContext.intent.hasSlot,
-        slot: interactionContext.intent.slot,
+        status: props.intent.status,
+        hasSlot: props.intent.hasSlot,
+        slot: props.intent.slot,
         data: ''
     });
 
-    console.log("CONSTRUTOR")
-    console.log(interactionContext)
-    console.log(intentState)
 
     function onBlur(e) {
         setIntentState(
@@ -69,9 +63,9 @@ const Intent = (props) => {
         console.log("NO SAVE INTENT")
 
         console.log(data)
-        console.log(interactionContext.intent)
+        console.log(props.intent)
 
-        let newIntent = { ...interactionContext.intent };
+        let newIntent = { ...props.intent };
 
         newIntent.phrase = data;
         newIntent.saved = true;
@@ -115,8 +109,8 @@ const Intent = (props) => {
     }
 
     console.log("ENTROU")
-    console.log(interactionContext)
-    if (interactionContext.intent.saved == false) {
+    console.log(props)
+    if (props.intent.saved == false) {
 
         return (
 
@@ -133,7 +127,7 @@ const Intent = (props) => {
                         <TextField
 
                             color='primary'
-                            key={interactionContext.intent.id}
+                            key={props.intent.id}
                             onBlur={(e) => onBlur(e)}
                         />
                     </FormControl>
@@ -154,7 +148,7 @@ const Intent = (props) => {
                             <Slot
                                 saveSlotCallback={(data) => saveSlotCallback(data)}
                                 slot={intentState.slot}
-                                id={interactionContext.intent.id}>
+                                id={props.intent.id}>
                             </Slot>
                         </div> : null
                 }
@@ -162,7 +156,7 @@ const Intent = (props) => {
             </div>
         )
 
-    } else if (interactionContext.intent.saved == true) {
+    } else if (props.intent.saved == true) {
         return (
             <Grid container>
                 <Grid item xs={12} sm={12}>
@@ -171,16 +165,16 @@ const Intent = (props) => {
                             <AccountIcon color="primary" />
                         </div>
                         <Paper className={props.classes.card} elevation={3}>
-                            <p>{interactionContext.intent.phrase}</p>
+                            <p>{props.intent.phrase}</p>
                         </Paper>
                     </div>
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     {
-                        interactionContext.intent.hasSlot ?
+                        props.intent.hasSlot ?
                             <PillContainer style={{ marginLeft: '40px', marginRight: '40px', marginTop: '10px' }}>
                                 <span style={{ marginRight: '10px' }}>Resposta salva na variável:</span>
-                                {interactionContext.intent.slot.map((o) => (
+                                {props.intent.slot.map((o) => (
                                     <Pill key={o.value}>
                                         <div>{o.value} - {o.type}</div>
 

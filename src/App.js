@@ -90,7 +90,7 @@ function App() {
       </Drawer>
       <Container>
       <div style={{ padding: 200 }}>
-         <InteractionBlock></InteractionBlock>
+         <Flow></Flow>
       </div>
 
       </Container>
