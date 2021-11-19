@@ -107,6 +107,7 @@ const Response = (props) => {
 
         updateResponse.phrase = data;
         updateResponse.saved = true;
+       
         console.log(props)
         props.onSave(props.id, updateResponse);
     }

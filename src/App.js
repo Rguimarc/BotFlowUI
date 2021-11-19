@@ -9,9 +9,8 @@ import FlashOnIcon from '@material-ui/icons/FlashOn';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import Container from '@material-ui/core/Container';
  
-import Flow from './dialog/flow';
-import DemoQueryBuilder from './decisor'
-import InteractionBlock from './dialog/interactionBlock';
+import  DialogTree from './diagram/dialogTree';
+ 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -90,7 +89,7 @@ function App() {
       </Drawer>
       <Container>
       <div style={{ padding: 200 }}>
-         <Flow></Flow>
+         <DialogTree></DialogTree>
       </div>
 
       </Container>

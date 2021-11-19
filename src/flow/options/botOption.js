@@ -3,6 +3,8 @@ import Button from '@material-ui/core/Button';
 
 export default function BotOptions(props) {
 
+    console.log("BotOptions Component Init Props: ", props);
+
     const btnText = (!props.greetingsBlock) ? 'Bloco Bot' : 'Saudação';
 
     return (

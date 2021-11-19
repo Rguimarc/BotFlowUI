@@ -6,6 +6,8 @@ import styled from '@emotion/styled'
 import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 import AccountIcon from '@material-ui/icons/AccountCircle';
+import { EVENT_TYPE } from './enums/eventEnum';
+const uuid = require('uuid');
 
 const PillContainer = styled.div`
   display: flex;
@@ -41,76 +43,66 @@ const styles = theme => ({
 
 const Intent = (props) => {
 
-    const [intentState, setIntentState] = useState({
-        status: props.intent.status,
-        hasSlot: props.intent.hasSlot,
-        slot: props.intent.slot,
-        data: ''
-    });
+    let intent = {}
+
+    if (props.intent) {
+        intent = {
+            id: props.intent.id,
+            phrase: props.intent.phrase,
+            saved: props.intent.saved,
+            slot: props.intent.slot,
+            hasSlot: props.intent.hasSlot,
+            type:props.intent.type
+        }
+    }
+    else {
+        intent = {
+            id: uuid.v4(),
+            phrase: undefined,
+            saved: false,
+            slot: [],
+            hasSlot: false,
+            type: EVENT_TYPE.USER
+        }
+    }
+
+    const [intentState, setIntentState] = useState(intent);
 
 
     function onBlur(e) {
-        setIntentState(
-            {
-                status: 'draft',
-                data: e.target.value,
-                slot: intentState.slot
-            })
-    }
-
-    function saveIntent(data) {
-
-        console.log("NO SAVE INTENT")
-
-        console.log(data)
-        console.log(props.intent)
-
-        let newIntent = { ...props.intent };
-
-        newIntent.phrase = data;
-        newIntent.saved = true;
-        newIntent.slot = intentState.slot ? intentState.slot : [];
-        newIntent.hasSlot = intentState.hasSlot;
-
-        setIntentState({ status: 'saved', data: data })
-
-        props.onSave(newIntent)
+        let intent = { ...intentState };
+        intent.phrase = e.target.value;
+        setIntentState(intent)
     }
 
     function onSave() {
-        saveIntent(intentState.data)
+        let intent = { ...intentState }
+        intent.saved = true;
+        setIntentState(intent)
+        props.onSave(intent)
     }
 
     function handleSaveVariableSwitch() {
-        console.log("NO handle vriable")
-        console.log(intentState)
-        setIntentState({
-            hasSlot: !intentState.hasSlot,
-            slot: intentState.slot,
-            data: intentState.data
-        })
-
-        console.log(intentState)
+        let intent = { ...intentState }
+        intent.hasSlot = !intentState.hasSlot;
+        setIntentState(intent);
     }
 
     function saveSlot(slot) {
 
-        console.log("NO SAVE SLOT")
-        console.log(intentState.slot)
-        setIntentState({
-            slot: [...intentState.slot, slot],
-            hasSlot: true,
-            data: intentState.data
-        })
+        let intent = { ...intentState };
+        intent.slot = slot;
+        intent.hasSlot = true;
+        setIntentState(intent);
     }
 
     function saveSlotCallback(data) {
         saveSlot(data)
     }
 
-    console.log("ENTROU")
-    console.log(props)
-    if (props.intent.saved == false) {
+    console.log("Intent Component Init Props: ", props);
+ 
+    if (!props.intent.saved) {
 
         return (
 
@@ -127,13 +119,13 @@ const Intent = (props) => {
                         <TextField
 
                             color='primary'
-                            key={props.intent.id}
+                            key={intentState.id}
                             onBlur={(e) => onBlur(e)}
                         />
                     </FormControl>
 
 
-                    <IconButton id='btnUserIntent' size="small" onClick={() => onSave(intentState.data)}>
+                    <IconButton id='btnUserIntent' size="small" onClick={() => onSave()}>
                         <SaveIcon fontSize="large" variant="contained" color="primary" />
                     </IconButton  >
 
@@ -148,7 +140,7 @@ const Intent = (props) => {
                             <Slot
                                 saveSlotCallback={(data) => saveSlotCallback(data)}
                                 slot={intentState.slot}
-                                id={props.intent.id}>
+                                id={intentState.id}>
                             </Slot>
                         </div> : null
                 }
@@ -156,7 +148,7 @@ const Intent = (props) => {
             </div>
         )
 
-    } else if (props.intent.saved == true) {
+    } else {
         return (
             <Grid container>
                 <Grid item xs={12} sm={12}>

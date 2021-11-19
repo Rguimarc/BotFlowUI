@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { Handle } from 'react-flow-renderer';
-import InteractionBlock from './dialog/interactionBlock';
-import { NODE_TYPE } from './dialog/enums/interactionNodeEnum'
+import Block from '../flow/blocks/block';
 
-const InteractionNode = (props) => {
+const DialogNode = (props) => {
 
     const [parentNode] = useState(props.parentNode);
+
+    console.log("DialogNode Component Init Props: ", props);
 
     return (
         <>
 
-            <InteractionBlock
+            <Block
+                blockInit={props.blockInit}
                 parentNode={parentNode}
-                createDecisorNodeCallback={(data, nodeInfo) => this.props.createDecisorNodeCallback(data, nodeInfo)}>
-            </InteractionBlock>
+                createNodeCallback={(data, nodeInfo) => props.createNodeCallback(data, nodeInfo)}>
+            </Block>
 
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -37,4 +39,4 @@ const InteractionNode = (props) => {
 
 
 
-export default InteractionNode;
+export default DialogNode;
