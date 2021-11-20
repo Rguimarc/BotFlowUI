@@ -2,9 +2,9 @@ import React, { useState, useRef } from 'react';
 import { Box, Grid, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Options from '../options/options';
-import Intent from '../events/intent'
-import Response from '../events/response';
-import Slot from '../events/slot';
+import Intent from '../events/components/intent/intent'
+import Response from '../events/components/response/response';
+import Slot from '../events/components/intent/slot';
 import { EVENT_TYPE } from '../events/enums/eventEnum';
 import { MODE } from '../blocks/enums/blockEnums';
 const uuid = require('uuid');
@@ -36,9 +36,9 @@ const Block = (props) => {
     const [createSlot, setCreateSlot] = useState(false);
     const [parentNode] = useState(props.parentNode);
     const [hasChildren, setHasChildren] = useState(false);
-    const [initalized,setInitialized] = useState(!!props.blockInit);
+    const [initalized, setInitialized] = useState(!!props.blockInit);
 
-    if (props.blockInit && initalized ) {
+    if (props.blockInit && initalized) {
         block = {
             mode: props.blockInit.mode,
             dialogEvents: props.blockInit.dialogEvents,
@@ -76,7 +76,7 @@ const Block = (props) => {
 
     const createBotResponse = () => {
         console.log("CREATE BOT RESPONSE")
-       
+
         setDialogEvent([...dialogEvents, {
             id: uuid.v4(),
             phrase: '',
@@ -87,7 +87,7 @@ const Block = (props) => {
     }
 
     const saveIntent = (intentData) => {
-        console.log('no save callback do pai', intentData)
+        console.log("Block Component:saveIntent:",intentData)
         setHasChildren(true);
         const dialogEventsUpdated = [...dialogEvents].filter(x => x.id != intentData.id);
         setDialogEvent([...dialogEventsUpdated, intentData]);
@@ -97,8 +97,9 @@ const Block = (props) => {
     }
 
 
-    const saveResponse = (id, responseData) => {
-        const dialogEventsUpdated = [...dialogEvents].filter(x => x.id != id);
+    const saveResponse = (responseData) => {
+        console.log("Block Component:saveResponse:",responseData)
+        const dialogEventsUpdated = [...dialogEvents].filter(x => x.id != responseData.id);
         setDialogEvent([...dialogEventsUpdated, responseData]);
         setInitialized(false);
         setMode(MODE.DISPLAY);
@@ -139,7 +140,7 @@ const Block = (props) => {
                                 <div className={props.classes.gridText}>
                                     <Response
                                         saved={itemDialog.saved}
-                                        responses={block.dialogEvents.filter(x => x.type === EVENT_TYPE.BOT)}
+                                        response={itemDialog}
                                         onSave={(id, data) => saveResponse(id, data)}
                                         id={itemDialog.id}>
                                     </Response>
@@ -151,7 +152,7 @@ const Block = (props) => {
 
                                 <div className={props.classes.gridText}>
                                     <Intent
-                                        intent={block.dialogEvents.filter(x => x.type === EVENT_TYPE.USER)[0]}
+                                        intent={itemDialog}
                                         onSave={(data) => saveIntent(data)}
                                     ></Intent>
                                 </div>)

@@ -6,7 +6,7 @@ import styled from '@emotion/styled'
 import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 import AccountIcon from '@material-ui/icons/AccountCircle';
-import { EVENT_TYPE } from './enums/eventEnum';
+import { EVENT_TYPE } from '../../enums/eventEnum';
 const uuid = require('uuid');
 
 const PillContainer = styled.div`
@@ -43,28 +43,15 @@ const styles = theme => ({
 
 const Intent = (props) => {
 
-    let intent = {}
+    const intent = {
+        id: props.intent.id,
+        phrase: props.intent.phrase,
+        saved: props.intent.saved,
+        slot: props.intent.slot,
+        hasSlot: props.intent.hasSlot,
+        type: props.intent.type
+    }
 
-    if (props.intent) {
-        intent = {
-            id: props.intent.id,
-            phrase: props.intent.phrase,
-            saved: props.intent.saved,
-            slot: props.intent.slot,
-            hasSlot: props.intent.hasSlot,
-            type:props.intent.type
-        }
-    }
-    else {
-        intent = {
-            id: uuid.v4(),
-            phrase: undefined,
-            saved: false,
-            slot: [],
-            hasSlot: false,
-            type: EVENT_TYPE.USER
-        }
-    }
 
     const [intentState, setIntentState] = useState(intent);
 
@@ -101,7 +88,7 @@ const Intent = (props) => {
     }
 
     console.log("Intent Component Init Props: ", props);
- 
+
     if (!props.intent.saved) {
 
         return (
