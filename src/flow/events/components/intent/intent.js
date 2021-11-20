@@ -4,7 +4,8 @@ import IntentEdition from './intentEdition';
 
 const Intent = (props) => {
 
-  
+    console.log("Intent Component Init Props: ", props);
+
     const [intentState, setIntentState] = useState( {
         id: props.intent.id,
         phrase: props.intent.phrase,    
@@ -13,6 +14,8 @@ const Intent = (props) => {
         hasSlot: props.intent.hasSlot,
         type: props.intent.type
     });
+
+    console.log("Intent Component Init State: ", intentState);
 
 
     const onBlur = (e) => {
@@ -46,9 +49,8 @@ const Intent = (props) => {
         saveSlot(data)
     }
 
-    console.log("Intent Component Init Props: ", props);
-    console.log("Intent Component Init Props: ", intentState);
-    console.log("Intent Component Init Props: ", intentState.saved === false);
+
+
     if (intentState.saved === false) {
 
         return (
