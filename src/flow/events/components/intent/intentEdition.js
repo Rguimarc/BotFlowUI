@@ -54,10 +54,10 @@ const IntentEdition = (props) => {
                     <Paper className={props.classes.card} elevation={3}>
                         <p>{props.intent.phrase}</p>
                     </Paper>
-                    <IconButton id='btnUserIntent' size="small"  >
+                    <IconButton id='btnUserIntent' size="small" onClick={() => props.onDeleteCallback()}  >
                         <DeleteIcon fontSize="medium" variant="contained" color="primary" />
                     </IconButton>
-                    <IconButton id='btnUserIntent' size="small"  >
+                    <IconButton id='btnUserIntent' size="small"  onClick={() => props.onEditCallback(false)} >
                         <EditIcon fontSize="medium" variant="contained" color="primary" />
                     </IconButton>
                 </div>

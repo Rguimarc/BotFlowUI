@@ -6,9 +6,9 @@ const Intent = (props) => {
 
     console.log("Intent Component Init Props: ", props);
 
-    const [intentState, setIntentState] = useState( {
+    const [intentState, setIntentState] = useState({
         id: props.intent.id,
-        phrase: props.intent.phrase,    
+        phrase: props.intent.phrase,
         saved: props.intent.saved,
         slot: props.intent.slot,
         hasSlot: props.intent.hasSlot,
@@ -49,7 +49,15 @@ const Intent = (props) => {
         saveSlot(data)
     }
 
+    const onEdit = (status) => {
+        const intentUpdate = { ...intentState };
+        intentUpdate.saved = status;
+        setIntentState(intentUpdate);
+    }
 
+    const onDelete = () => {
+        props.onDelete(intentState.id);
+    }
 
     if (intentState.saved === false) {
 
@@ -66,7 +74,9 @@ const Intent = (props) => {
 
     } else {
         return (
-            <IntentEdition 
+            <IntentEdition
+                onDeleteCallback={onDelete}
+                onEditCallback={onEdit}
                 intent={intentState}>
             </IntentEdition>
         )

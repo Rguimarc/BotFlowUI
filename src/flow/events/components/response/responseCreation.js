@@ -2,9 +2,8 @@ import MUIRichTextEditor from 'mui-rte'
 import React, { useState } from 'react';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import { Grid } from '@material-ui/core';
-
-
-const  ResponseCreation = (props) => {
+import { convertFromHTML, ContentState, convertToRaw } from 'draft-js'
+const ResponseCreation = (props) => {
 
     console.log("ResponseCreation Component Init Props: ", props);
 
@@ -76,13 +75,15 @@ const  ResponseCreation = (props) => {
     });
 
 
-
+    const contentHTML = props.phrase ? convertFromHTML(props.phrase) : convertFromHTML("<p><br></p>");
+    const state = ContentState.createFromBlockArray(contentHTML.contentBlocks, contentHTML.entityMap)
+    const content = JSON.stringify(convertToRaw(state))
 
     return (
         <Grid container style={{ paddingLeft: '60px', paddingTop: '10px', paddingRight: '40px' }}>
             <Grid item >
                 <MuiThemeProvider theme={responseCreationState.theme}>
-                    <MUIRichTextEditor label="Digite a reposta do bot..." theme={responseCreationState.theme} onSave={props.onSaveRichText}
+                    <MUIRichTextEditor label={"Digite a reposta do bot..."} value={content} theme={responseCreationState.theme} onSave={props.onSaveRichText}
                         autocomplete={{
                             strategies: [
                                 {

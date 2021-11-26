@@ -1,7 +1,6 @@
 import { convertFromRaw } from 'draft-js'
 import { stateToHTML } from "draft-js-export-html";
 import React, { useEffect, useState } from 'react';
-
 import ResponseCreation from './responseCreation';
 import ResponseEdition from './responseEdition';
 
@@ -20,6 +19,16 @@ const Response = (props) => {
 
     console.log("Response Component Init State: ", responseState);
 
+    const onEdit = (status) => {
+        const respUpdate = { ...response };
+        respUpdate.saved = status;
+        setResponseState(respUpdate);
+    }
+
+    const onDelete = () => {
+        props.onDelete(responseState.id);
+    }
+
     const onSaveRichText = async (data) => {
         setResponseState(
             {
@@ -28,7 +37,6 @@ const Response = (props) => {
                 saved: true,
                 type: props.response.type
             })
-
     }
 
     useEffect(() => {
@@ -36,15 +44,18 @@ const Response = (props) => {
             props.onSave(responseState)
     }, [responseState]);
 
-    if (props.saved == false) {
+    if (responseState.saved === false) {
         return (
             <ResponseCreation
+                phrase={responseState.phrase}
                 onSaveRichText={onSaveRichText}>
             </ResponseCreation>)
-    } else if (props.saved == true) {
+    } else if (responseState.saved === true) {
         return (
             <ResponseEdition
-                phrase={{ __html: responseState.phrase }}>
+                phrase={{ __html: responseState.phrase }}
+                onDeleteCallback={onDelete}
+                onEditCallback={onEdit}>
             </ResponseEdition>
         )
     }

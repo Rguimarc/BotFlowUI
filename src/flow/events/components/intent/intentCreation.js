@@ -21,7 +21,7 @@ const IntentCreation = (props) => {
             <div>
                 <FormControl size="large" style={{ width: '80%' }}>
                     <TextField
-
+                        value={props.intent.phrase}
                         color='primary'
                         key={props.intent.id}
                         onBlur={(e) => props.onBlur(e)}

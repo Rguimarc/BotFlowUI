@@ -7,8 +7,8 @@ import Response from '../events/components/response/response';
 import Slot from '../events/components/intent/slot';
 import { EVENT_TYPE } from '../events/enums/eventEnum';
 import { MODE } from '../blocks/enums/blockEnums';
-const uuid = require('uuid');
 import { NODE_TYPE } from '../../diagram/enums/dialogNodeEnum';
+const uuid = require('uuid');
 
 const styles = theme => ({
     gridDialog: {
@@ -87,7 +87,7 @@ const Block = (props) => {
     }
 
     const saveIntent = (intentData) => {
-        console.log("Block Component:saveIntent:",intentData)
+        console.log("Block Component:saveIntent:", intentData)
         setHasChildren(true);
         const dialogEventsUpdated = [...dialogEvents].filter(x => x.id != intentData.id);
         setDialogEvent([...dialogEventsUpdated, intentData]);
@@ -98,7 +98,7 @@ const Block = (props) => {
 
 
     const saveResponse = (responseData) => {
-        console.log("Block Component:saveResponse:",responseData)
+        console.log("Block Component:saveResponse:", responseData)
         const dialogEventsUpdated = [...dialogEvents].filter(x => x.id != responseData.id);
         setDialogEvent([...dialogEventsUpdated, responseData]);
         setInitialized(false);
@@ -106,6 +106,11 @@ const Block = (props) => {
     }
 
 
+    const onDeleteDialogEvent = (idToDelete) => {
+        let events = { ...dialogEvents };
+        events = dialogEvents.filter(x => x.id !== idToDelete);
+        setDialogEvent(events);
+    }
 
     const saveSlot = (slot) => {
 
@@ -134,7 +139,7 @@ const Block = (props) => {
 
                     {block.dialogEvents.map((itemDialog) => {
                         console.log("ITEM DIALOG", itemDialog)
-                        if (itemDialog.type == EVENT_TYPE.BOT)
+                        if (itemDialog.type === EVENT_TYPE.BOT)
                             return (
 
                                 <div className={props.classes.gridText}>
@@ -142,18 +147,20 @@ const Block = (props) => {
                                         saved={itemDialog.saved}
                                         response={itemDialog}
                                         onSave={(id, data) => saveResponse(id, data)}
-                                        id={itemDialog.id}>
+                                        id={itemDialog.id}
+                                        onDelete={(id) => onDeleteDialogEvent(id)}>
                                     </Response>
                                 </div>)
 
 
-                        else if (itemDialog.type == EVENT_TYPE.USER)
+                        else if (itemDialog.type === EVENT_TYPE.USER)
                             return (
 
                                 <div className={props.classes.gridText}>
                                     <Intent
                                         intent={itemDialog}
                                         onSave={(data) => saveIntent(data)}
+                                        onDelete={(id) => onDeleteDialogEvent(id)}>
                                     ></Intent>
                                 </div>)
 

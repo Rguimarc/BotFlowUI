@@ -36,10 +36,10 @@ const ResponseEdition = (props) => {
                     <Paper className={props.classes.card} elevation={3}
                         dangerouslySetInnerHTML={props.phrase}>
                     </Paper>
-                    <IconButton id='btnUserIntent' size="small"  >
+                    <IconButton id='btnUserIntent' size="small" onClick={() => props.onDeleteCallback()}>
                         <DeleteIcon fontSize="medium" variant="contained" color="secondary" />
                     </IconButton>
-                    <IconButton id='btnUserIntent' size="small"  >
+                    <IconButton id='btnUserIntent' size="small" onClick={() => props.onEditCallback(false)}  >
                         <EditIcon fontSize="medium" variant="contained" color="secondary" />
                     </IconButton>
                 </div>
